@@ -1,0 +1,14 @@
+core module lecture -6
+use - database connect kai liy code processing api call file system kai it call core module
+           yai hamari file mai pahlai sai hi banai hotai h'
+       ex - console.log()  //its core module
+      ex - fs,Buffer,HTTP      
+     difference bttween global and non - global
+    global vo hota jinko import karnai ki jarurath nahi hoti
+    ex- console.log 
+
+
+ lecture - 7
+ create serve
+ use http server
+ handle request and response on server   
