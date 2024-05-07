@@ -1,15 +1,11 @@
-const app = require('./app')
+//core module
+console.log("code Step ny step")
+ const fs = require('fs')  //ab file creeate hogahi
+//fs.writeFileSync("Hello.txt","code step by step") //non-global core modules because we need to install
+//or bhi file create kar sktai h
+//fs.writeFileSync("Hello2.txt","Like and subscribe")
+//directory bhi check kar sktai h
 
-// console.log(app.x)
-// console.log(app.y)
-// console.log(app)
-// console.log(app.z)
-// console.log(app.z())
-//use filter method
-arr = [2,3,4,5,6,7]
+console.log(">> mohit",__dirname)
 
-const result  = arr.filter((item)=>{
-    return item === 3
-}) 
-
-console.log(result)
+console.log("file Name",__filename)
