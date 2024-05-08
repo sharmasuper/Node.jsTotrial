@@ -1,14 +1,24 @@
-//how Node js is work
+const express = require('express')
+const app = express()
 
-//code =>calll Stack => NodeAPI =>event Loop
-console.log("Starting up")
+app.get('/',(req,res)=>{
+  res.send("hello , this is home page")
 
-setTimeout(()=>{
-    console.log("2 second log")
-},2000)
+})
+app.get('/about',(req,res)=>{
+    res.send("hello , this is about page")
+    
+  })
 
-setTimeout(()=>{
-    console.log("0 second log")
-},0)
 
-console.log("Finishing up")
+  app.get('/help',(req,res)=>{
+    res.send("hello , this is help page")
+    
+  }) 
+
+app.listen(5000)  //server per run karatai h 
+
+
+
+
+
