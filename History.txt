@@ -105,7 +105,8 @@ fs.unlinkSync(`${dirpath}/fruit.txt`)
 lecture - 15 - Asncronous programming Language
  lecture - 16 Handle Asynchronous Data
 
-
+lecture - 17 how nodejs work
+ //code =>calll Stack => NodeAPI =>event Loop
 
 
 
