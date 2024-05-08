@@ -65,6 +65,59 @@ lecture - 14 crud with file system oparation in asynchronous Programming Languag
 
 what is buffer - jab bhi hum node js per file create kartai h to node js ko todi si memory chahiyai hoti
               taki vo apnai perform achhai sai kar skkai or usai hum buffer boltai 
+-----------------lecture14 crud file system--------------------------------------------
+
+
+const fs = require('fs')
+const path = require('path')
+const dirpath = path.join(__dirname,"crud")
+//fs.writeFileSync('apple.txt',"this file text")  //yai file merai root folder mai banaigi
+//isliy mai issai crud folder mai file banauga
+//create method
+const filepath =  `${dirpath}/apple.txt`
+// fs.writeFileSync(filepath,"this is simple text file")
+//read method
+// fs.readFile(filepath,'utf8',(error,item)=>{
+//   console.log(item)
+// })
+//update method
+// fs.appendFile(filepath," and file name is apple.txt",(err)=>{
+//     if(!err){
+//         console.log("file is updated")
+//     }
+// })
+
+//rename
+// fs.rename(filepath,`${dirpath}/fruit.txt`,(err)=>{
+//     if(!err) {console.log("file name isUpdate")}
+// })
+
+//Delete
+
+fs.unlinkSync(`${dirpath}/fruit.txt`)
+-----------------------------------close lecture14 file code ------------------------------------------------------
+
+
+
+
+
+
+lecture - 15 - Asncronous programming Language
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
