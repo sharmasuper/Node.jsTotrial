@@ -12,3 +12,8 @@ use - database connect kai liy code processing api call file system kai it call 
  create serve
  use http server
  handle request and response on server   
+
+lecture - 8
+package.json
+//install command 
+//frist - npm init
