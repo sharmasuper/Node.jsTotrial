@@ -56,4 +56,11 @@ console.log(process.argv[2])
 //command run - node .\index.js hello mohit
 //result - hello
 
+lecture - 13
+ display file list from folder
+ make file folder build fiels require('fs') file server by loop
+ get all file ussing file foreach method
+
+
+
 
