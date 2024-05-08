@@ -17,3 +17,20 @@ lecture - 8
 package.json
 //install command 
 //frist - npm init
+
+lecture 9 - make .gitignore file
+
+lecture 10 - install nodemon command => npm i nodemon
+             run command - nodemon .\index.js
+             
+ lecture -11 make simple api 
+   create server bananai kai badh response ka type difine kaigai 
+   resp.writeHead(200,{'Content-Type':'application\json'})           
+    
+   fir data.js sai datako import karigai 
+   const data = require('./data')
+
+   or use response ko likaigai json data object ko string mai convert karigai
+   resp.write(JSON.stringify(data))
+
+localHost per print kargai - .listen(4500) 
