@@ -1,19 +1,11 @@
-console.log("start exe ....")
-
-
-
-setTimeout(()=>{
-    console.log("Logic exc ----")
-},2000)
-console.log("complete exe ....")
-//dropback example in acncronous programming
-let a = 2
-let b = 5
-
-setTimeout(()=>{
-    b=20;
-},2000)
-console.log(a+b)
-
-
-
+let a = 20
+let b = 0
+let waitingData  = new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+        resolve(30)
+    },2000)
+})
+waitingData.then((data)=>{
+    b = data
+    console.log(a+b)
+})
