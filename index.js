@@ -1,28 +1,49 @@
 const fs = require('fs')
-// // fs.unlinkSync('apple.text') file delete command
-// fs.writeFileSync('apple.txt','this is a apple file')
-
-//issai sirf ek file create ho rahi h but mai chahtha hu ki loop mai ek sath kahi file cereate ho tab
-//jab bhi file create karai to humai uska path ki need hoti ki hum issai kis folder mai create karaigai 
-// const fs = require('fs')
 const path = require('path')
-const dirPath = path.join(__dirname,'files');
-// console.log(dirPath)
-// for(let i=0;i<5;i++){
-//     fs.writeFileSync(dirPath+"/hello"+i+".txt","a simple tet file")
-// }
-//ab is file ko read karna h 
-//read tab kara sktai h jab file kai ander content ho
- fs.readdir(dirPath,(error,files)=>{
-    // console.warn(files)   //return files in array
-    files.forEach((item)=>{
-        console.log("files name is ",item)
-    })
- })
+const dirpath = path.join(__dirname,"crud")
+//fs.writeFileSync('apple.txt',"this file text")  //yai file merai root folder mai banaigi
+//isliy mai issai crud folder mai file banauga
+//create method
+const filepath =  `${dirpath}/apple.txt`
+// fs.writeFileSync(filepath,"this is simple text file")
+//read method
+// fs.readFile(filepath,'utf8',(error,item)=>{
+//   console.log(item)
+// })
+//update method
+// fs.appendFile(filepath," and file name is apple.txt",(err)=>{
+//     if(!err){
+//         console.log("file is updated")
+//     }
+// })
 
-//hum iss flder ka data dusrai folder mai access nahi kar sktai 
-//nahi get because yai ek web server
+//rename
+// fs.rename(filepath,`${dirpath}/fruit.txt`,(err)=>{
+//     if(!err) {console.log("file name isUpdate")}
+// })
 
-console.log("notes")
+//Delete
+
+fs.unlinkSync(`${dirpath}/fruit.txt`)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
