@@ -22,11 +22,18 @@ app.get('/profile',(req,resp)=>{
   const user = {
     name : "anil sidu",
     email : "anil@gmail.com",
-    city : "tonk"
+    city : "tonk",
+    skills : ['php','js','c++','java','python']
    }
 
  resp.render('profile',{user})
 })
+
+
+app.get('/login',(req,resp)=>{
+  resp.render('Login')                 //ab hamai common header chahiya isliy hum common folder banaigai
+})
+
 
 
 app.get('/home',(req,resp)=>{
