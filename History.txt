@@ -259,6 +259,27 @@ jismai hum kuch bhi commanly use kar sktai
 bus simply yai command use karni h -    <%- include('common/header'); %>
 
 
+lecture - 25 Middleware
+why we use middleware in routes 
+because we use mddleware only routes so we use middleware on routes
+it help we handle or access request or response and modified request or response
+
+why we do modified request or respone 
+because many time we need check use athentication yes or no
+so we need to modify it 
+
+ya hami age karni hoti h ya specific country kai ander side block karni hoti h jab hum iska use kartai h
+
+middleware Type - 
+ 1 application-level middleware 
+ 2 Route-level middleware
+ 3 Error-handling middleware
+ 4 Built - in middleware
+ 5 third party middleware
+
+abhi hamnai is lecture mai application -level middleware dekai h
+
+
 
 
 
