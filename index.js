@@ -6,10 +6,28 @@ const app = express()
 
 const publicpath = path.join(__dirname,'public')  
 
-// app.use(express.static(publicpath));
+
+app.set('view engine','ejs');
+//jab bhi hum template engine use karai hmai views folder hi banana chihiyai ya by default hota h
+
+
 app.get('',(req,resp)=>{
+
   resp.sendFile(`${publicpath}/index.html`)
 })
+
+
+
+app.get('/profile',(req,resp)=>{
+  const user = {
+    name : "anil sidu",
+    email : "anil@gmail.com",
+    city : "tonk"
+   }
+
+ resp.render('profile',{user})
+})
+
 
 app.get('/home',(req,resp)=>{
   resp.sendFile(`${publicpath}/Home.html`)
@@ -18,14 +36,14 @@ app.get('/about',(req,resp)=>{
   resp.sendFile(`${publicpath}/about.html`)
 })
 
-//but koi bhi route match nahi ho to 404 page kasia banai
-//uper valai route mai sai koi bhi route match nahi ho ta kaya karai
+
 
 app.get('*',(req,resp)=>{
-  resp.sendFile(`${publicpath}/PagenotFound.html`)   //koi bhi match nahi hoga to yai about.html page per redirect kar dega
+   
+  resp.sendFile(`${publicpath}/PagenotFound.html`)   
 })
  
-app.listen(5000,()=>{
+app.listen(5000,()=>{ 
   console.log("api hit")
 })
 
