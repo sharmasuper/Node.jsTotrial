@@ -151,6 +151,19 @@ style or image issai add nahi kar sktai
 
 
 
+lecture - 22 Make 404page extenstion remove
+
+app.get('*',(req,resp)=>{
+  resp.sendFile(`${publicpath}/PagenotFound.html`)   //koi bhi match nahi hoga to yai about.html page per redirect kar dega
+})
+
+app.get('/about',(req,resp)=>{      esai hum extenstion remove ka sktai or .html page likhnia ki need bhi nahi padhti
+  resp.sendFile(`${publicpath}/about.html`)
+})
+
+
+
+
 
 
 

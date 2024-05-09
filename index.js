@@ -3,13 +3,28 @@ const path = require('path');
 const app = express()
 
 
-// const publicPath = path.join(__dirname,'public')
-const publicpath = path.join(__dirname,'public')  //yai ab public folder ki jitni bhi file h unko access kraiga
- //node js root page ko by default index.html samjtha h
-  ///but isasai hum style.css or image add nahi kar sktai 
-                                   //isko esai access kar sktai h http://localhost:5000/about.html
-app.use(express.static(publicpath));
 
+const publicpath = path.join(__dirname,'public')  
+
+// app.use(express.static(publicpath));
+app.get('',(req,resp)=>{
+  resp.sendFile(`${publicpath}/index.html`)
+})
+
+app.get('/home',(req,resp)=>{
+  resp.sendFile(`${publicpath}/Home.html`)
+})
+app.get('/about',(req,resp)=>{
+  resp.sendFile(`${publicpath}/about.html`)
+})
+
+//but koi bhi route match nahi ho to 404 page kasia banai
+//uper valai route mai sai koi bhi route match nahi ho ta kaya karai
+
+app.get('*',(req,resp)=>{
+  resp.sendFile(`${publicpath}/PagenotFound.html`)   //koi bhi match nahi hoga to yai about.html page per redirect kar dega
+})
+ 
 app.listen(5000,()=>{
   console.log("api hit")
 })
