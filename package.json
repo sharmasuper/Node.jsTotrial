@@ -19,6 +19,7 @@
   "author": "mohit sharma",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.8",
     "colors": "^1.4.0",
     "ejs": "^3.1.10",
     "express": "^4.19.2",

@@ -388,6 +388,24 @@ step1 = serach mongodb npm  - and then you will write npm i mongodb
 step2 = go there documentation and read it that how it connect
 
 
+lecture31 - Read data from Mongodb
+            hum db collection ki alag sai file banaigai 
+            because last lecture we had connect databse 
+            suppose we want to create many functions for many difference database
+            again and again we will not create database  because it take time cunsuming process but does not take enough time only 
+            take 3 to 5 microsec 
+            but compare to other code ,he take time so we keep only one collection
+
+         i have one query in my mind,how i will create db.collection  file
+         answer its simple  - 
+         step1 - create file mongodb.js
+         step2  - break index.js code in functions so that you don't confuze
+         
+
+
+
+
+
 
 
 
