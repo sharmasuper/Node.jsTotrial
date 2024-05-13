@@ -405,7 +405,7 @@ lecture31 - Read data from Mongodb
 
 
 lecture 32 - in this lecture we have create insert file for insert data nodejs to mongoDB
-
+ lecture 33 - in this lecture data have updated using node js to mongoDB
 
 
 
