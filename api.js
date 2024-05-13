@@ -20,6 +20,17 @@ let result = await data.insertOne(req.body)
 
    resp.send(result)
 })
+  
+app.put('/:name',async(req,resp)=>{
+    // here we have write name and we have access name property only 
+    //jab hum params pass kartai h tab likhna jaruri hota
+    const data = await dbConnect()
+    // const result = await data.updateMany({name:req.body.name},{$set:req.body})
+    // const result = await data.updateMany({name:"mohit"},{$set:req.body})
+    const result = await data.updateMany({name:req.params.name},{$set:req.body}) 
+    // resp.send({result:"update"})
+    resp.send(result)
+})
 
 app.listen(5000)
 

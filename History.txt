@@ -417,7 +417,15 @@ step1 - now, we we are wrting data in postman and send to nodejs
         whenever i get data to postman, we use middleware 
         app.use() method
         app.use(express.json()) because over data will be enable
-        
+
+
+
+lecture37 - Update data in Mongodb
+   route mai "/:name" pass kiya to hum isssai req.params.name sai hi access kar sktai h
+
+
+
+
 
 
 
