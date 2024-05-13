@@ -423,8 +423,10 @@ step1 - now, we we are wrting data in postman and send to nodejs
 lecture37 - Update data in Mongodb
    route mai "/:name" pass kiya to hum isssai req.params.name sai hi access kar sktai h
 
-
-
+lecture -38 delete api using Mongodb
+ const mongodb = require('mongodb')
+ object_id = new mongodb.ObjectId(req.params.id)   
+ id ko object id banaya
 
 
 

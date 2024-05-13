@@ -1,6 +1,8 @@
 const express = require('express')
 const {dbConnect} = require('./mongodb') 
+const mongodb = require('mongodb')    //hamai issai import karna hoga
 const app = express();
+
 app.use(express.json())  //data json mai enable ho jay
 app.get('/',async(req,resp)=>{
     let data = await dbConnect()
@@ -27,9 +29,20 @@ app.put('/:name',async(req,resp)=>{
     const data = await dbConnect()
     // const result = await data.updateMany({name:req.body.name},{$set:req.body})
     // const result = await data.updateMany({name:"mohit"},{$set:req.body})
+    //hum deleteOne k bhi use kar skai h
     const result = await data.updateMany({name:req.params.name},{$set:req.body}) 
     // resp.send({result:"update"})
     resp.send(result)
+})
+
+app.delete('/:id',async(req,resp)=>{
+    console.log(req.params.id)
+    const data = await dbConnect()
+    object_id = new mongodb.ObjectId(req.params.id) //is tarah sai 
+    const result = await data.deleteMany({_id:object_id})  //hamai id ko object id bnna hoga
+    //mongodb mai object id hoti or _id vali id hoti 
+//    resp.send("done")
+resp.send(result)
 })
 
 app.listen(5000)
