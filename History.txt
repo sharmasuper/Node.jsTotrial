@@ -370,6 +370,22 @@ app.use('/',route)  //or yai line lkhni h last mai
 
 
 
+lecture -27 Install mongoDB
+step1 - serach download mongoDB and 
+step2 - click Mongodb Community download
+step3 - download Mongodb Community server in msi
+step4 - download mongoDB shell for server
+step5 - open cmd and run command mongod if it direct to path and show error 
+step6- create data folder in c directory this data folder create db folder 
+step7 - run command mongod if not direct to starting path server is run 
+step8 - run mongosh (powershell command)
+
+leccture - 30 
+   connect Mongodb with node js
+
+step1 = serach mongodb npm  - and then you will write npm i mongodb
+
+step2 = go there documentation and read it that how it connect
 
 
 
