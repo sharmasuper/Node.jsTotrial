@@ -409,9 +409,15 @@ lecture 32 - in this lecture we have create insert file for insert data nodejs t
  lecture -34 - this lecture , we have created delete.js file and data has deleted by using deleted method deletedMany
 
 lecture35 - Basic api with mongodb
+    haum kabhi bhi api sai body pass nahi kar sktai h
 
-
-
+lecture36 - Post api with Mongodb
+step1 - now, we we are wrting data in postman and send to nodejs
+        but i have one question how to send daya and  how i will find data in node js recive or not
+        whenever i get data to postman, we use middleware 
+        app.use() method
+        app.use(express.json()) because over data will be enable
+        
 
 
 
