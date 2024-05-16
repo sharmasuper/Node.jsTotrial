@@ -1,47 +1,24 @@
+const express = require('express')
+require('./config')
+const Product = require('./Product')
+const app = express()
+app.use(express.json())
+app.post("/create",async (req,resp)=>{
+    let data = new Product(req.body)
+    let result = await data.save()
+    console.log(result)                       //these Post api have send only one object not array 
+                                                 //test api i thunderClient and Postman
+    // console.log(req.body)
+    resp.send("done")
+
+})
+
+app.listen(5000)
 
 
-const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/e-come')
 
-const productSchema = new mongoose.Schema({
-    name : String,
-    price : Number,
-    brand:String,
-    Category:String
-});
 
-const SaveInDB = async () =>{
-    const Product = mongoose.model('products',productSchema)
-    let data  = new Product({name : "max 131",
-                            price:500,
-                            brand:"GHRML",
-                            Category:"Store"
-                        });
-    const result = await data.save()
-    console.log(result)
-}
-// main()
-const UpdateInDB = async() =>{
-    const Product = mongoose.model('products',productSchema)
-   let data = await Product.updateMany( {name:"max 131"} ,{$set:{price:10,name:"hello Suita"}})  //updateone bhi use kar sktai hu
-   console.log(data)
-}
 
-// UpdateInDB()
 
-const DeleteInDB = async() =>{
-  const Product = mongoose.model('products',productSchema)
-  let data  = await Product.deleteMany({name:"hello Suita"}) //DeleOne ka bhi use kar sktai h
-  console.log(data)
-}
-
-// DeleteInDB()
-
-const FindInDB = async() =>{
-    const Product = mongoose.model('products',productSchema)
-    let data = await Product.find({name:'m8'})    //findOne bhi use kar sktai h
-    console.log(data);
-}
-FindInDB()
 
 

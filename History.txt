@@ -456,6 +456,17 @@ but Modal Basically have used to schema and connect Mongodb to nodejs
 
 lecture-40 CRUD with mongoose
   
+lecture -41 Post APi With Mongoose 
+      and then test api in Postman and thunder Client
+  ///body kai threw data send kiya
+{
+  "name":"Mohit Sharma",
+  "price":400,
+  "brand":"Samsung",
+  "category":"Mobbiles"
+}
+
+
 
 
 
