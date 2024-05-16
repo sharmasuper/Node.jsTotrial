@@ -1,32 +1,47 @@
+
+
 const mongoose = require('mongoose')
-const main = async() =>{
-    await mongoose.connect("mongodb://localhost:27017/e-come")
-    const ProductSchema = new mongoose.Schema({
-        name : String,
-        price : Number  // now price will be entering in result 
-    });
-    const ProductModal = mongoose.model('products',ProductSchema)
-  //products have database name
-  //let data = new  ProductModal({name:"m8"})   //result name enter ho gaya
-  let data = new ProductModal({name:"m8",price:1000}) //but Price have not enter bacause In validation we had not written price
-  let result = await data.save();
-  console.log(result)
+mongoose.connect('mongodb://localhost:27017/e-come')
 
+const productSchema = new mongoose.Schema({
+    name : String,
+    price : Number,
+    brand:String,
+    Category:String
+});
+
+const SaveInDB = async () =>{
+    const Product = mongoose.model('products',productSchema)
+    let data  = new Product({name : "max 131",
+                            price:500,
+                            brand:"GHRML",
+                            Category:"Store"
+                        });
+    const result = await data.save()
+    console.log(result)
 }
-main()
+// main()
+const UpdateInDB = async() =>{
+    const Product = mongoose.model('products',productSchema)
+   let data = await Product.updateMany( {name:"max 131"} ,{$set:{price:10,name:"hello Suita"}})  //updateone bhi use kar sktai hu
+   console.log(data)
+}
 
+// UpdateInDB()
 
+const DeleteInDB = async() =>{
+  const Product = mongoose.model('products',productSchema)
+  let data  = await Product.deleteMany({name:"hello Suita"}) //DeleOne ka bhi use kar sktai h
+  console.log(data)
+}
 
-// {
-//     name: 'm8',
-//     price: 1000,
-//     _id: new ObjectId('664665f89d9e1e40447ff2b0'),
-//     __v: 0
-//   }
-// result
+// DeleteInDB()
 
-
-
-
+const FindInDB = async() =>{
+    const Product = mongoose.model('products',productSchema)
+    let data = await Product.find({name:'m8'})    //findOne bhi use kar sktai h
+    console.log(data);
+}
+FindInDB()
 
 
