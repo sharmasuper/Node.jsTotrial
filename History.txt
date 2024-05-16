@@ -429,9 +429,29 @@ lecture -38 delete api using Mongodb
  id ko object id banaya
 
 
+--------------------------------------------------------------------------------------
+lecture-39 
+Mongoose with node
+mongoose have two part 1st schema and other is Modal
+
+what is schema? - 
+it Basically validates database validation
+
+In this schema we defined ,which field you have keeped in database like as name ,id ,address,brand,price,
+
+if we  does not defines field in schema such as number . in this case,mongoose will denine to add undefined field
+
+in schema we use type validation
 
 
+What is Modal? -
+Modal Basically connect Mongodb to nodejs
 
+What is different between Modal and Schema ?
+all field in database such as - name,class,number 
+we have defined it Schema so that validation will be apply
+
+but Modal Basically have used to schema and connect Mongodb to nodejs
 
 
 
