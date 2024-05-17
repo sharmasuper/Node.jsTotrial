@@ -467,8 +467,8 @@ lecture -41 Post APi With Mongoose
 }
 
 
-
-
+lecture 42 - GET,DELETE,and PUT method in mongoose
+       
 
 
 
