@@ -1,7 +1,13 @@
 const express = require('express')
 const app = express()
+
 app.use(express.urlencoded({extended:false})) //these  method we handle post req
 app.use(express.json())  //when we send josn data it convert Array data to json format
+app.use((req,resp,next)=>{
+    console.log(`${req.method} - ${req.url}`)
+    next()  //inovke next moddleware function or next function
+})
+
 const users = [
     {name:"mohitsharma",email:"mohit@gmail.com"},
     {name:"sunitasharma",email:"sunita@gmail.com"},
@@ -60,22 +66,34 @@ app.get("/post",(req,resp)=>{
    
 })
 
-app.post('/posts',(req,resp)=>{
-    console.log(req.headers)
-    const {authorization} = req.headers;  //how headers work
-    console.log(authorization)
-  
-    if(authorization && authorization === '123'){
-       const posts = req.body
+
+function validateAuthToken(req,res,next){
+    console.log("inside Validate Auth Token")
+   const {authorization} = req.headers;
+   if(authorization && authorization === '123'){
+    next()
+   }else {
+    res.status(403).send({msg:"forbidden . Incorrect Credentials"})
+   }
+}
+
+
+
+app.post('/posts',validateAuthToken,(req,resp)=>{
+   // console.log(req.headers)
+   // console.log(req.body)
+   // const {authorization} = req.headers;  //how headers work 
+    // console.log(authorization) 
+
+       const posts = req.body 
        console.log(posts)
-       post.push(posts)
-       console.log(post)
+       post.push(posts) 
+       console.log(post) 
        resp.status(201).send(posts) 
-    }else{
-        resp.status(403).send("forbidden")
-    }
         
 })
+
+
 
 
 app.listen(3000,()=>{

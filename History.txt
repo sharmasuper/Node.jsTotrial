@@ -481,3 +481,19 @@ when we write it we can use x-www-from-urllecoded data
 
 and we write middleeare app.use(express.json)
 this time we use json row data 
+
+
+lecture -4 Middleware
+An express middleware is nothing more or less than just any ordinary function that has three parameters:Request & Response object,
+and a function to invoke the next middleeare function
+
+middleeare allow you to seprate your logic multiple difference functions,invoking each in sequential order
+
+ex = We used the express.json() middleeare to handle request to detect body request with json, and the function the 
+request object and attaches the proper payload to req.body
+
+we were set key in postman header
+aurtorization = '123'
+then use condition 
+
+
