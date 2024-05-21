@@ -1,50 +1,86 @@
 const express = require('express')
-const cookieparser = require('cookie-parser')
 const app = express()
+app.use(express.urlencoded({extended:false})) //these  method we handle post req
+app.use(express.json())  //when we send josn data it convert Array data to json format
+const users = [
+    {name:"mohitsharma",email:"mohit@gmail.com"},
+    {name:"sunitasharma",email:"sunita@gmail.com"},
+    {name:"hellosharma",email:"hello@gmail.com"}
+]
 
-app.use(cookieparser())
-
+const post = [
+    {title:"My name is mohit",author:"mohit"},
+    {title:"sunita home",author:"sunita"},
+    {title:"laddu ji or badham ji",author:"laddu ji bdham"}
+]
 
 app.get("/",(req,resp)=>{
-    resp.send("hello Cookie")
-})
-
-app.get("/set-cookie",(req,resp)=>{
-    // resp.setHeader('set-cookie',"foo=bar")
-    //resp.setHeader("name of header","key=value")
-    resp.cookie('foo','bar',{
-        // maxAge:5000,
-        // expires:new Date('22 May 2024')
-        // httpOnly : true  //it means this cookie could not be accessable in client side  ; this not secure
-      //  secure : true // then the cookie only were set only http over connection not over the plane http connection 
-    //   domain : 'example.com'
+    resp.send({
+        msg:"hello!",
+        user:{ }
     })
-    // resp.cookie('fizz','buzz')
-    resp.send("cookie are set")
 })
 
-app.get('/get-cookie',(req,resp)=>{
-    console.log(req.cookies)
-    resp.send(req.cookies)
+app.post('/',(req,resp)=>{
+   const use = req.body
+   users.push(use)
+   console.log(users)
+    resp.status(200).send('Created user') 
 })
 
-app.get('/del-cookie',(req,resp)=>{
 
-    resp.clearCookie('fizz')
-    resp.send("Cookie has been deleted")
-    
+
+
+app.get("/user",(req,resp)=>{
+    resp.status(200).send(users)
+})
+
+app.get('/user/:name',(req,resp)=>{
+    const {name} = req.params
+    const user = users.find((user)=>user.name===name)
+   
+    if(user) resp.status(200).send(user);
+    else resp.status(200).send('Not found');
+   
+})
+
+
+app.get("/post",(req,resp)=>{
+   
+    const {author} = req.query
+    console.log("author",author)
+    if(author){
+        const posts = post.find((post)=>post.author === author)
+           
+        if(posts) resp.status(200).send(posts);
+        else resp.status(404).send("not found page") ;
+    }else{
+        resp.status(200).send(post)
+    }
+   
+})
+
+app.post('/posts',(req,resp)=>{
+    console.log(req.headers)
+    const {authorization} = req.headers;  //how headers work
+    console.log(authorization)
+  
+    if(authorization && authorization === '123'){
+       const posts = req.body
+       console.log(posts)
+       post.push(posts)
+       console.log(post)
+       resp.status(201).send(posts) 
+    }else{
+        resp.status(403).send("forbidden")
+    }
+        
 })
 
 
 app.listen(3000,()=>{
-    console.log("Cookie server on port 3000")
+    console.log("server api is hit on port 3000")
 })
-
-
-
-
-
-
 
 
 

@@ -471,6 +471,13 @@ lecture 42 - GET,DELETE,and PUT method in mongoose
        
 lecture - 43 - search api in node js with mongodb
 
+lector - anson the developer 
+in this video we have learn about get and post request how it work how to use middleware
+anson the develop it is lect-1 or 2 videos 
 
+when we use body in postman  - x-www-from-urllecoded 
+this time we use middleeare app.use(express.urlencoded({extended:false}))
+when we write it we can use x-www-from-urllecoded data
 
-
+and we write middleeare app.use(express.json)
+this time we use json row data 
