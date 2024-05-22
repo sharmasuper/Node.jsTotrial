@@ -496,4 +496,13 @@ we were set key in postman header
 aurtorization = '123'
 then use condition 
 
+lecture - 5 cookie
+http cookie are a small piece of data that is send  back from a server to web browser 
+we server store these cookies which allow subseqent requests made to the server to exchange the cookie for piece of information.
+
+Cookie can have an expiration date . Once expired , the cookie will no longer be sent to the server whenever a request is made
+
+we are set cookie using command -  resp.cookie('session_id','123456') 
+we are get cookie using command - req.cookies
+
 

@@ -1,6 +1,7 @@
+const cookieParser = require('cookie-parser')
 const express = require('express')
 const app = express()
-
+app.use(cookieParser())
 app.use(express.urlencoded({extended:false})) //these  method we handle post req
 app.use(express.json())  //when we send josn data it convert Array data to json format
 app.use((req,resp,next)=>{
@@ -77,7 +78,32 @@ function validateAuthToken(req,res,next){
    }
 }
 
+const validateCookie = (req,resp,next)=>{
+    const {cookies} = req;
+   console.log(cookies) 
+   if('session_id' in cookies) {
+    console.log('session Id Exists')
+    if(cookies.session_id === '123456'){
+         next()
+    }else{
+        resp.status(403).send({msg:"Not Authenticated"})
+    }
+   }else{
+    resp.status(403).send({msg:"Not Authenticated"})
+   }
+   
+}
 
+app.get('/protected',validateCookie,(req,resp)=>{
+   resp.status(200).json({msg:'you are authorized'})
+})
+   
+
+
+app.get('/signin',(req,resp)=>{
+    resp.cookie('session_id','123456') 
+    resp.status(200).json({msg : 'Logged In'})
+})
 
 app.post('/posts',validateAuthToken,(req,resp)=>{
    // console.log(req.headers)
@@ -92,6 +118,7 @@ app.post('/posts',validateAuthToken,(req,resp)=>{
        resp.status(201).send(posts) 
         
 })
+
 
 
 
