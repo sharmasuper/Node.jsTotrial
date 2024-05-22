@@ -1,10 +1,23 @@
 const cookieParser = require('cookie-parser')
 const express = require('express')
+const session = require('express-session')
 const app = express()
+const store = new session.MemoryStore();
+app.use(session({
+    secret : 'some secret', 
+    cookie : {maxAge:30000}, 
+    saveUninitialized : true,
+    store
+    // saveUninitialized :false
+}))
+
+
+
 app.use(cookieParser())
 app.use(express.urlencoded({extended:false})) //these  method we handle post req
 app.use(express.json())  //when we send josn data it convert Array data to json format
 app.use((req,resp,next)=>{
+    console.log("store",store) 
     console.log(`${req.method} - ${req.url}`)
     next()  //inovke next moddleware function or next function
 })
@@ -64,7 +77,7 @@ app.get("/post",(req,resp)=>{
     }else{
         resp.status(200).send(post)
     }
-   
+     
 })
 
 
@@ -119,6 +132,28 @@ app.post('/posts',validateAuthToken,(req,resp)=>{
         
 })
 
+
+app.post('/login',(req,resp)=>{
+    console.log("req.sessionID",req.sessionID)
+   const {username,password} = req.body
+   if(username && password){  
+    if(req.session.authenticated){
+        resp.json(req.session)   
+    }else{
+        if(password === '123'){
+            req.session.authenticated = true
+            req.session.user = {
+                username,password
+            };
+            resp.json(req.session)
+        }else{
+            resp.status(403).json({msg:"Bad Credentials"})
+        }
+    }
+
+   }else resp.status(403).json({msg:'Bad Credentials'})
+  
+})
 
 
 

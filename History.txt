@@ -506,3 +506,23 @@ we are set cookie using command -  resp.cookie('session_id','123456')
 we are get cookie using command - req.cookies
 
 
+lecture - 6 session
+session is very important because it allow to maintain http request.
+the major difference between session and cookie is that session live on server and cookie live on the client side
+now  reason is why you  need session ,many reason but major reason is you don't want to save anyviewer data as a cookie like anything
+that's sensitive so for example a username a password you
+
+you don't want to save that as a cookie on the client you want to save that on the database so that what the session know which
+user is making that request so essentially session are more secure because they store on the server rather than having everything
+stored in client so I think honestly the best way to show you guys how it works is by providing example in express so 
+
+1st step = npm i express-session
+
+
+
+
+
+
+
+
+
