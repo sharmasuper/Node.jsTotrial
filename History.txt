@@ -518,6 +518,9 @@ stored in client so I think honestly the best way to show you guys how it works 
 
 1st step = npm i express-session
 
+lecture -7 Routers
+
+lecture - 8 Connecting to MYSql database
 
 
 
