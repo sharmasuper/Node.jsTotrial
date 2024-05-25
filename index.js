@@ -1,23 +1,41 @@
-const express = require('express');
-const path = require('path');
-const app = express();
+// const express = require('express')
+// const app = express()
 
-app.get('/download', (req, res) => {
-  const imagePath = path.join(__dirname, 'History.txt'); //image bhi send kar sktai h image.jpg file write karkai
-  const filename = 'image.txt';
+// app.get("/set-cookie",(req,resp)=>{
+//   resp.cookie('name','value',{
+//     maxAge :60*60*24*1000,
+//     httpOnly:true,
+//     secure :true
+//   })
+  
+//   resp.send("hello home route")
+// })
 
-  // Set the Content-Disposition header to attachment with the specified filename
-  res.attachment(filename);
 
-  // Send the image file
-  res.sendFile(imagePath, (err) => {
-    if (err) {
-      console.error('Error occurred while sending file:', err);
-      res.status(500).send('Error occurred while downloading the file.');
-    }
-  });
-});
+// app.listen(3000,()=>{
+//   console.log("api hit successfully")
+// })
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
+const express = require("express")
+const app = express()
+app.get("/cookie-set",(req,resp)=>{
+  resp.cookie('name','mohit',{
+    maxAge :2000,
+    httpOnly : true,
+    secure : true
+  })
+  resp.send("cookie is set successfully")
+})
+
+app.get("/clear-cookie",(req,resp)=>{
+  resp.clearCookie('name',{
+    httpOnly:true,
+    secure :true
+  })
+  resp.send("cookie clear seccessfully")
+})
+
+app.listen(3000,()=>{
+  console.log("api send successfully")
+})
+
