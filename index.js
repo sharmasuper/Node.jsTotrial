@@ -1,18 +1,24 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
+const port = 3000;
 
-app.route("/").get((req,resp)=>{
-    const data = [
-        {
-            "name" :"mohit",
-            number : "6375349671",
-            status :["hello","hy","name"]
-        }
-    ]
+// Sample route that sends a JSONP response
+app.get('/api/data', (req, res) => {
+  const responseBody = {
+    message: 'Hello, World!',
+    status: 'success',
+    data: {
+      id: 1,
+      name: 'Sample Data',
+      info: 'This is a sample JSONP response'
+    }
+  };
+ 
+  
+  // Send JSONP response
+  res.jsonp(responseBody);
+});
 
-   resp.send(data) 
-})
-
-app.listen(3000,()=>{
-    console.log("api hit successfully")
-})
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
