@@ -1,22 +1,34 @@
 const express = require('express')
+
 const app = express()
-// app.use(express.json())
+app.use(express.json())
+app.get("/data",(req,resp)=>{
+    const data = {
+        name : "mohit sharma",
+        message : "hello world!",
+        timestamp: new Date().toISOString(),
+    }
+    resp.format({
+        'text/plain':()=>{
+            resp.send(`${data.message}\n${data.timestamp}`);
+        },
+        'text/html': () => {
+            resp.send(`<html><body><h1>${data.message}</h1><p>${data.timestamp}</p></body></html>`);
+          },
 
-app.route('/end').get((req,resp)=>{
-    console.log("hello how are you")
-    resp.write("response send successfully")
-    resp.end()
+          'application/json': () => {
+            resp.json(data);
+          },  
+         
+          'default': () => {
+            resp.status(406).send('Not Acceptable');
+          } 
+
+    })
+    //these method  we use difference type send method ,such as josn format only show josn(data) default - not acceptable html page - show html data etc
+    //but when we use these method ,these do not allow to use send() method 
 })
-app.route('/hello').get((req,resp)=>{
-    // resp.write("hello route how are you")
-    resp.setHeader('Content-Type', 'application/json')
-    const data = JSON.stringify([{"name":"Ram","hello":"sharma"}])
-    // // resp.write(data)
-    resp.end(data) 
+const port = 3000
+app.listen(port,()=>{
+    console.log("api hit successfully")
 })
-
-app.listen(3000,()=>{
-    console.log("api hit successfully") 
-})
-
-
