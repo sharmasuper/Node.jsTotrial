@@ -1,34 +1,25 @@
-const express = require('express')
+const express = require('express');
+const app = express();
 
-const app = express()
-app.use(express.json())
-app.get("/data",(req,resp)=>{
-    const data = {
-        name : "mohit sharma",
-        message : "hello world!",
-        timestamp: new Date().toISOString(),
-    }
-    resp.format({
-        'text/plain':()=>{
-            resp.send(`${data.message}\n${data.timestamp}`);
-        },
-        'text/html': () => {
-            resp.send(`<html><body><h1>${data.message}</h1><p>${data.timestamp}</p></body></html>`);
-          },
+// Middleware to add custom headers
+app.use((req, res, next) => {
+  res.set('X-Custom-Header', 'CustomHeaderValue');
+  res.set('Content-Type', 'application/json');
+  next();
+});
 
-          'application/json': () => {
-            resp.json(data);
-          },  
-         
-          'default': () => {
-            resp.status(406).send('Not Acceptable');
-          } 
+// Route to demonstrate res.get()
+app.get('/headers', (req, res) => {
+  const customHeader = res.get('X-Custom-Header');
+  const contentType = res.get('Content-Type');
 
-    })
-    //these method  we use difference type send method ,such as josn format only show josn(data) default - not acceptable html page - show html data etc
-    //but when we use these method ,these do not allow to use send() method 
-})
-const port = 3000
-app.listen(port,()=>{
-    console.log("api hit successfully")
-})
+  res.json({
+    customHeader: customHeader,
+    contentType: contentType,
+  });
+});
+
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
