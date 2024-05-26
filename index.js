@@ -1,25 +1,18 @@
-const express = require('express');
-const app = express();
+const express = require('express')
+const app = express()
 
-// Middleware to add custom headers
-app.use((req, res, next) => {
-  res.set('X-Custom-Header', 'CustomHeaderValue');
-  res.set('Content-Type', 'application/json');
-  next();
-});
+app.route("/").get((req,resp)=>{
+    const data = [
+        {
+            "name" :"mohit",
+            number : "6375349671",
+            status :["hello","hy","name"]
+        }
+    ]
 
-// Route to demonstrate res.get()
-app.get('/headers', (req, res) => {
-  const customHeader = res.get('X-Custom-Header');
-  const contentType = res.get('Content-Type');
+   resp.send(data) 
+})
 
-  res.json({
-    customHeader: customHeader,
-    contentType: contentType,
-  });
-});
-
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+app.listen(3000,()=>{
+    console.log("api hit successfully")
+})
