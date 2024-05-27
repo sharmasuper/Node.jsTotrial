@@ -1,31 +1,19 @@
-const express = require("express")
-const app = express()
-const path = require("path")
-// const filepath = path.join(__dirname,'History.txt')
+const express = require('express');
+const app = express();
+const port = 3000;
 
+app.get('/', (req, res) => {
+  res.sendStatus(200); // Sends a 200 OK status with the message "OK"
+});
 
-app.route("/").get((req,resp)=>{
+app.get('/not-found', (req, res) => {
+  res.sendStatus(404); // Sends a 404 Not Found status with the message "Not Found"
+});
 
-  const options = {
-    root : path.join(__dirname),
-    headers : {
-        'date':new Date(),
-         'recived':true
-    }
-    
-  }
+app.get('/error', (req, res) => {
+  res.sendStatus(500); // Sends a 500 Internal Server Error status with the message "Internal Server Error"
+});
 
-   resp.sendFile('Histor.txt',options,(err,html)=>{
-    if(err){
-        resp.status(400).send("file not found")
-    }else{
-        console.log("file send successfully with response")
-       
-    }
-   })
-})
-
-app.listen(3000,()=>{
-    console.log("api hit successfully")
-})
-
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
