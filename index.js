@@ -1,18 +1,16 @@
+// Certainly! The res.redirect() method in Express.js is used to redirect the client to a
+//  different URL. This method can take two arguments: the optional HTTP status code and the URL to redirect
+//  to. If the status code is not provided, it defaults to 302 Found.
+
 const express = require('express')
 const app = express()
-
-app.route("/location").get((req,resp)=>{
-    resp.location('http://google.com')  //when i triger the /location it should be redirecte the http:goole.com website
-    resp.status(302).send('Redirecting to a http://example.com')
-    // resp.status(201).send('Redirecting to a http://example.com')
-    // resp.send('Redirecting to a http://example.com')
-    // This is commonly used in conjunction with a 302 Found or 201 Created response to indicate the url
+app.route("/hello").get((req,resp)=>{
+    resp.redirect('http://google.com')
+    //it is not allow to use resp.send() method when we use resp.redirect method
 })
 app.listen(3000,()=>{
     console.log("api hit successfully")
 })
-
-
 
 
 
