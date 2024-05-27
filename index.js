@@ -1,30 +1,38 @@
-// It looks like there might be a typo in your request. If you meant the res.status() method in
-//  Express.js, it is used to set the HTTP status code for the response. This method is often used 
-//  in conjunction with other response methods like res.send(),
-//  res.json(), or res.end() to send the response with the specified status code.
+
+// The res.type(type) method in Express.js is used to set the 
+// Content-Type HTTP header to the MIME type specified by the type parameter. 
+// This method can be useful for ensuring that the response is 
+// correctly interpreted by the client based on the type of content being sent.
+
 
 const express = require('express');
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.status(200).send('OK'); // Sets status to 200 and sends the response 'OK'
+app.get('/html', (req, res) => {
+  res.type('html');
+  res.send('<h1>Hello World</h1>'); // Sends an HTML response
 });
 
-app.get('/not-found', (req, res) => {
-  res.status(404).send('Not Found'); // Sets status to 404 and sends the response 'Not Found'
+
+app.get('/json', (req, res) => {
+  res.type('json');
+  res.send({ message: 'Hello World' }); // Sends a JSON response
 });
 
-app.get('/error', (req, res) => {
-  res.status(500).json({ error: 'Internal Server Error' }); // Sets status to 500 and sends a JSON response
+app.get('/text', (req, res) => {
+  res.type('text');
+  res.send('Hello World'); // Sends a plain text response
+});
+
+app.get('/xml', (req, res) => {
+//  console.log( "hello type",res.type('hello'))  it send null ....
+res.type('xml')
+console.log(res.type('xml'))
+  res.send('<message>Hello World</message>'); // Sends an XML response
 });
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-
-
-
-
-
 
