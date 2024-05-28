@@ -1,46 +1,28 @@
-const express = require("express")
-const app = express()
+const express = require('express');
+const app = express();
+const port = 3000;
 
-app.route("/content").get((req,resp)=>{
-    resp.vary('hello')
-  
-    if(req.accepts('json')){
-        resp.type('text').send('Hello, plain text!');
-    }
-    if(req.accepts('html')){
-        resp.send("<h1>hello, how vary</h1>")
-    }else if(req.accepts('json')){
-        resp.json({message :"hello josn !!"})
-    }else {
-        resp.type('text').send('Hello, plain text!');
-    }
-})
-
-app.get('/language', (req, res) => {
-    // Ensure the response varies based on the 'Accept-Language' header
-    res.vary('Accept-Language');
-  
-    const lang = req.acceptsLanguages('en', 'es');
-    if (lang === 'es') {
-      res.send('Hola, Mundo!');
+// Define a route
+app.get('/data', (req, res) => {
+    // Check which content type the client accepts
+    const acceptedType = req.accepts(['json','html','xml']);
+    
+    // Respond based on the accepted type
+    if (acceptedType === 'json') {
+        res.json({ message: 'This is a JSON response' });
+    } 
+     else if (acceptedType === 'html') {
+        res.send('<html><body><h1>This is an HTML response</h1></body></html>');
+    } else if (acceptedType === 'xml') {
+        res.type('application/xml');
+        res.send('<response><message>This is an XML response</message></response>');
     } else {
-      res.send('Hello, World!');
+        // Default response if none of the specified types are accepted
+        res.status(406).send('Not Acceptable');
     }
-  });
+});
 
-
-app.listen(3000,()=>{
-    console.log("api hit successfully")
-})
-
-
-
-
-
-
-
-
-
-
-
-
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
