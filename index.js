@@ -1,37 +1,29 @@
-const express = require("express")
+
+const express = require('express')
 const app = express()
+const port = 3000
 
 app.use((req,resp,next)=>{
-    const acceptedLanguage = req.acceptsLanguages( 'en','es', 'fr')
-    if(acceptedLanguage){
-        req.language = acceptedLanguage
-    }else{
-        resp.status(400).send("Not accepted")
-        return 
-    }
-    next()
+    const userAgent  = req.get('User-Agent')
+    const acceptLanguage = req.get('Accept-Language')
+    const customHeader = req.get('X-Custom-header')
+    const power = req.get('Connection')
+    console.log("frist",userAgent)
+    console.log("second",acceptLanguage)
+    console.log("third",customHeader)
+    console.log("power",power)
+      next()
 })
+app.get('/data',(req,resp)=>{
+    resp.send("Check the console for logged header values")
 
-app.route("/data").get((req,resp)=>{
-    let greeting;
-    switch(req.language){
-        case 'en' :
-            greeting = "hello en"
-            break
-        case 'es' :
-            greeting = " hello es"   
-            break 
-        case 'fr' :
-            greeting = "hello fr" 
-            break
-        default :
-          greeting = "hy default"       
-    }
-    resp.send(`api hit successfully helo gre - ${greeting} and ${req.language}`)
 })
 app.listen(3000,()=>{
     console.log("api hit successfully")
 })
+
+
+
 
 
 
