@@ -1,26 +1,39 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+const express = require("express")
+const app = express()
 
-// Middleware to set the response charset based on client's preferences
-app.use((req, res, next) => {
-    const acceptedCharset = req.acceptsCharsets('iso-8859-1', 'windows-1252');
-
-    if (acceptedCharset) {
-        res.charset = acceptedCharset;
-    } else {
-        res.status(406).send('Not Acceptable');
-        return;
+app.use((req,resp,next)=>{
+    const acceptedLanguage = req.acceptsLanguages( 'en','es', 'fr')
+    if(acceptedLanguage){
+        req.language = acceptedLanguage
+    }else{
+        resp.status(400).send("Not accepted")
+        return 
     }
-    next();
-});
+    next()
+})
 
-// Define a route
-app.get('/data', (req, res) => {
-    res.send(`This response is encoded in ${res.charset}`);
-});
+app.route("/data").get((req,resp)=>{
+    let greeting;
+    switch(req.language){
+        case 'en' :
+            greeting = "hello en"
+            break
+        case 'es' :
+            greeting = " hello es"   
+            break 
+        case 'fr' :
+            greeting = "hello fr" 
+            break
+        default :
+          greeting = "hy default"       
+    }
+    resp.send(`api hit successfully helo gre - ${greeting} and ${req.language}`)
+})
+app.listen(3000,()=>{
+    console.log("api hit successfully")
+})
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+
+
+
+
