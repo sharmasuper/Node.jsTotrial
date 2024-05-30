@@ -1,22 +1,107 @@
+// const express = require('express');
+// const fs = require('fs');
+// const path = require('path');
+// const app = express();
+// const port = 3000;
+
+// // Example route for serving a video file
+// app.get('/video', (req, res) => {
+//   const videoPath = path.join(__dirname, 'video.mp4');
+//   const videoSize = fs.statSync(videoPath).size;
+
+//   const range = req.range(videoSize);
+
+//   if (range) {
+//     if (range.type === 'bytes') {
+//       const start = range[0].start;
+//       const end = range[0].end < videoSize ? range[0].end : videoSize - 1;
+//       const chunkSize = end - start + 1;
+
+//       const file = fs.createReadStream(videoPath, { start, end });
+//       const head = {
+//         'Content-Range': `bytes ${start}-${end}/${videoSize}`,
+//         'Accept-Ranges': 'bytes',
+//         'Content-Length': chunkSize,
+//         'Content-Type': 'video/mp4',
+//       };
+
+//       res.writeHead(206, head);
+//       file.pipe(res);
+//     } else {
+//       res.status(416).send('Requested range not satisfiable');
+//     }
+//   } else {
+//     const head = {
+//       'Content-Length': videoSize,
+//       'Content-Type': 'video/mp4',
+//     };
+//     res.writeHead(200, head);
+//     fs.createReadStream(videoPath).pipe(res);
+//   }
+// });
+
+// app.listen(port, () => {
+//   console.log(`Server is running on http://localhost:${port}`);
+// });
+
+
+
+
+
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 const port = 3000;
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+app.get('/file', (req, res) => {
+  const filePath = path.join(__dirname, 'History.txt');
+  const fileSize = fs.statSync(filePath).size;
 
-// Middleware to parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true }));
+  const range = req.range(fileSize);
 
-app.get('/user/:id', (req, res) => {
-  // Deprecated way
-  const userId = req.param('id');
-  const token = req.param('token', 'defaultToken123');
-   // Providing a default value if token is not present
-   //it means  id is not present when we use default token 
-  res.send(`User ID: ${userId}, Token: ${token}`);
+  if (range && range.type === 'bytes') {
+    const start = range[0].start;
+    const end = range[0].end < fileSize ? range[0].end : fileSize - 1;
+    const chunkSize = end - start + 1;
+
+    const fileStream = fs.createReadStream(filePath, { start, end });
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunkSize,
+      'Content-Type': 'text/plain',
+    };
+
+    res.writeHead(206, head);
+    fileStream.pipe(res);
+  } else {
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'text/plain',
+    };
+    res.writeHead(200, head);
+    fs.createReadStream(filePath).pipe(res);
+  }
 });
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
