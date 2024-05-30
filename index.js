@@ -1,31 +1,23 @@
+const express = require('express');
+const app = express();
+const port = 3000;
 
-const express = require('express')
-const app = express()
-const port = 3000
+// Middleware to parse JSON bodies
+app.use(express.json());
 
-app.use((req,resp,next)=>{
-    const userAgent  = req.get('User-Agent')
-    const acceptLanguage = req.get('Accept-Language')
-    const customHeader = req.get('X-Custom-header')
-    const power = req.get('Connection')
-    console.log("frist",userAgent)
-    console.log("second",acceptLanguage)
-    console.log("third",customHeader)
-    console.log("power",power)
-      next()
-})
-app.get('/data',(req,resp)=>{
-    resp.send("Check the console for logged header values")
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
 
-})
-app.listen(3000,()=>{
-    console.log("api hit successfully")
-})
+app.post('/data', (req, res) => {
+  if (req.is('application/json')) {
+    res.json({"hello":"frist"});
+  } else if (req.is('application/x-www-form-urlencoded')) {
+    res.send('Received URL-encoded data');
+  } else {
+    res.send('Received other type of data');
+  }
+});
 
-
-
-
-
-
-
-
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
