@@ -1,25 +1,27 @@
 const express = require('express')
 const app = express()
-const router = express.Router()
+app.use(express.json())
 
-router.route('/base').get((req,resp)=>{
-  url = req.baseUrl
-  ug = req.url
-  resp.send(`hello router url - ${url} and personal is ${ug} `)
-  // api hit url is /hello
+
+app.route("/post").post((req,resp)=>{
+ const add = req.body.map((item,index)=>{
+         return `<p key=${index}>${item.name} and ${item.email}</p>`
+                
+ })
+  
+  resp.send(`hello dude how data -  and bodyis ${req.body} hello bo - ${add}`) 
+
 })
 
-app.use('/hello',router)
-
-app.route("/home").get((req,resp)=>{
-  hu = req.url
-  resp.send(`api hit url is  ${hu}`)
-  // api hit url is /home
+app.route('/home').get((req,resp)=>{
+  resp.send(`api need successfully - ${req.body}`)
 })
 
 app.listen(3000,()=>{
   console.log("api hit successfully")
 })
+
+
 
 
 
