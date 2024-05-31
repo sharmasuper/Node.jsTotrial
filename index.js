@@ -1,21 +1,31 @@
 const express = require('express');
 const app = express();
-
-// Middleware to trust the first proxy
-// app.set('trust proxy', true);
-
-// Middleware to log the client's IP addresses
-// app.use((req, res, next) => {
-//   console.log('Client IP addresses:', req.ips);
-//   next();
-// });
-
-// Route handling requests
-app.get('/', (req, res) => {
-  res.send(`Hello! Your IP addresses are ${req.method}`);
+const router = express.Router()
+// Middleware to log the original URL
+app.use((req, res, next) => {
+  console.log('Original URL: hell', req.originalUrl);
+  next();
+});
+router.use((req, res, next) => {
+  console.log('Original URL:', req.originalUrl);
+  next();
 });
 
-// output Client IP addresses: [ '203.0.113.1', '198.51.100.1' ]
+router.get("/hello",(req,resp)=>{
+  resp.send("Hello router"+req.originalUrl)
+})
+
+
+app.use("/exa",router)
+// Route to handle requests
+app.get('/example', (req, res) => {
+  res.send(`You requested the URL: ${req.originalUrl}`);
+});
+
+// Another route to demonstrate query strings
+app.get('/search', (req, res) => {
+  res.send(`Search query: ${req.originalUrl}`);
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;
