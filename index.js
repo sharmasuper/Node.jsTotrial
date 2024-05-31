@@ -1,23 +1,23 @@
-const cookieParser = require("cookie-parser");
-const express = require("express");
-const app = express();
-app.use(cookieParser())
+const express = require('express')
+const app = express()
 
-app.route("/cookie").get((req,resp)=>{
-  resp.cookie('hy','hello',{
-    secure:true,
-    httpOnly:true,
-    path:'/cookie',
-    maxAge:2000
-  })
-  const getCookie = JSON.stringify(req.cookies)
-  resp.send(`successfully send cookie ${getCookie}`)
+app.use((req,resp,next)=>{
+  resp.set('Last-Modified',new Date().toUTCString())
+  resp.set('ETag','12345')
+  next()
 })
 
-app.route("/get-cookie").get((req,resp)=>{
-  var getCookie = req.cookies
-  resp.send(`hello cookies - ${JSON.stringify(getCookie)}`)
+app.get("/",(req,resp)=>{
+  if(req.fresh){
+    resp.status(304).end()
+  }else{
+    resp.status(200).send("This is a fresh response with new content")
+  }
 })
-app.listen(3000, () => {
-  console.log("API hit successfully");
-});
+
+
+
+app.listen(3000,()=>{
+  console.log("api hot successsfully")
+})
+
