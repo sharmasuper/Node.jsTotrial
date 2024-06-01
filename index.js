@@ -1,25 +1,23 @@
-const express = require("express")
-const app = express()
+const express = require('express');
+const app = express();
 
-app.get('/user/:id',(req,resp)=>{
-  const id = req.param('id')
-  resp.send(`User Id is - ${id}`)
-})
+app.use((req, res, next) => {
+    console.log(`Requested path: ${req.path}`);
+    next();
+});
 
-app.get("/search",(req,resp)=>{
-  const query = req.param('q')
-  //these method we question for url
-  resp.send(`search query is - ${query}`)
-})
+app.get('/user/:id', (req, res) => {
+    res.send(`User ID path: ${req.path}`);
+});
 
-app.listen(3000,()=>{
-  console.log("api hit successfully")
-})
+app.get('/search', (req, res) => {
+    res.send(`Search path: ${req.path}`);
+});
 
+app.post('/login', (req, res) => {
+    res.send(`Login path: ${req.path}`);
+});
 
-
-
-
-
-
-
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
