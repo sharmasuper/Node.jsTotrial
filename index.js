@@ -1,4 +1,5 @@
-// const express = require('express')
+
+const express = require('express')
 // const app = express()
 // app.param('id',(req,resp,next,name)=>{
 //   console.log(`param name is ${name}`)
@@ -16,12 +17,13 @@
 // app.listen(3000,()=>{
 //   console.log("api hit successfully")
 // })
+// both method are corrected
 
-const express = require('express')
 const app = express()
 app.get("/name/:id",(req,resp)=>{
    resp.send(`hello how you ${req.params.id}`)
 })
+
 app.listen(3000,()=>{
   console.log("api hit successfully")
 })
