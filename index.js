@@ -1,32 +1,22 @@
-
-const express = require('express')
-// const app = express()
-// app.param('id',(req,resp,next,name)=>{
-//   console.log(`param name is ${name}`)
-//   if(typeof name === 'string'){
-//     req.id = name
-//     next()
-//   }else{
-//     resp.status(400).send("invalid router param")
-//   }
-// })
-
-// app.get("/name/:id",(req,resp)=>{
-//  resp.send(`hello response how you ${req.id}`)
-// })
-// app.listen(3000,()=>{
-//   console.log("api hit successfully")
-// })
-// both method are corrected
-
+const express = require("express")
 const app = express()
-app.get("/name/:id",(req,resp)=>{
-   resp.send(`hello how you ${req.params.id}`)
+
+app.get('/user/:id',(req,resp)=>{
+  const id = req.param('id')
+  resp.send(`User Id is - ${id}`)
+})
+
+app.get("/search",(req,resp)=>{
+  const query = req.param('q')
+  //these method we question for url
+  resp.send(`search query is - ${query}`)
 })
 
 app.listen(3000,()=>{
   console.log("api hit successfully")
 })
+
+
 
 
 
