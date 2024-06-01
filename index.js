@@ -1,34 +1,33 @@
-const express = require('express');
-const app = express();
-const router = express.Router()
-// Middleware to log the original URL
-app.use((req, res, next) => {
-  console.log('Original URL: hell', req.originalUrl);
-  next();
-});
-router.use((req, res, next) => {
-  console.log('Original URL:', req.originalUrl);
-  next();
-});
+// const express = require('express')
+// const app = express()
+// app.param('id',(req,resp,next,name)=>{
+//   console.log(`param name is ${name}`)
+//   if(typeof name === 'string'){
+//     req.id = name
+//     next()
+//   }else{
+//     resp.status(400).send("invalid router param")
+//   }
+// })
 
-router.get("/hello",(req,resp)=>{
-  resp.send("Hello router"+req.originalUrl)
+// app.get("/name/:id",(req,resp)=>{
+//  resp.send(`hello response how you ${req.id}`)
+// })
+// app.listen(3000,()=>{
+//   console.log("api hit successfully")
+// })
+
+const express = require('express')
+const app = express()
+app.get("/name/:id",(req,resp)=>{
+   resp.send(`hello how you ${req.params.id}`)
+})
+app.listen(3000,()=>{
+  console.log("api hit successfully")
 })
 
 
-app.use("/exa",router)
-// Route to handle requests
-app.get('/example', (req, res) => {
-  res.send(`You requested the URL: ${req.originalUrl}`);
-});
 
-// Another route to demonstrate query strings
-app.get('/search', (req, res) => {
-  res.send(`Search query: ${req.originalUrl}`);
-});
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+
