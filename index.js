@@ -1,34 +1,35 @@
-// Sure! The app.locals object in Express.js is used to store
-//  variables that are accessible to all templates and routes within 
-//  the application. This is useful for defining global variables that
-//   you want to be available in 
-// your views.
+// The app.METHOD(path, callback [, callback ...]) method in Express.
+// js is used to define route handlers for HTTP methods (such as GET, POST, PUT, DELETE, etc.) at specified paths. 
+// METHOD is a placeholder for the actual HTTP method you want to handle, like app.get, app.post, app.put, app.delete, etc.
 
 const express = require('express')
-const path = require('path')
 const app = express()
+app.use(express.json())
 
-app.set('view engine','ejs')
-app.set('views',path.join(__dirname,'views'));
-
-app.locals.siteTitle = 'My Awesome Site';
-
-app.get('/',(req,res)=>{
-    res.render('index',{message:"Welcome to the home page !"})
+app.get('/',(req,resp)=>{
+    resp.send('Get request to the homepage')
 })
 
-
-app.get('/about',(req,resp)=>{
-    resp.render('about',{message:"Learn more about us."})
+app.post('/submit',(req,resp)=>{
+    const data = req.body;
+    resp.send(`Post Method to /submit with date: ${JSON.stringify(data)}`)
 })
 
-const port = 3000
+app.put('/update/:id',(req,resp)=>{
+    const id = req.params.id;
+    const data = req.body;
+    resp.send(`put request to /update/${id} with date : ${JSON.stringify(data)}`)
+
+})
+
+app.delete('/delete/:id',(req,res)=>{
+    const id = req.params.id
+    res.send(`Delete request to /delete/${id}`)
+})
 
 app.listen(3000,()=>{
     console.log("api hit successfully")
 })
-
-
 
 
 
