@@ -1,33 +1,28 @@
-// In Express.js, the app.on('mount', callback(parent)) method is an event listener that gets triggered when 
-// a sub-application is mounted onto a parent application. This is useful when you want to execute some logic 
-// whenever your sub-application is added to a parent app. 
-// Here's an example demonstrating how to use it:
+// The app.param([name], callback) method in Express.js allows you to define middleware for route parameters. 
+// This method is particularly useful when you want to perform preprocessing on route parameters before they 
+// are handled by route handlers.
+//  Here's an example to illustrate its usage:
 
-
-const express  = require('express')
+const express = require('express')
 const app = express()
 
-const subapp = express()
-
-subapp.get('/',(req,resp)=>{
-    resp.send('Hello from sub-application')
+app.param('name',(req,resp,next,name)=>{
+    if(!name){
+      return name
+    }else{
+        console.log("name param get",name)
+        req.name = name
+        next()
+    }
 })
 
-subapp.on('mount',(parent)=>{
-    console.log('Sub-application has been mounted')
-    console.log('Parent app :',parent)
-})
-app.use('/sub',subapp);
-app.get('/',(req,resp)=>{
-    resp.send('Hello from the main application')
+app.route('/param/:name').get((req,resp)=>{
+    resp.send(`Api hit successfully on prama name ${req.name}`)
 })
 
-
-const port = 3000
-app.listen(3000,()=>{
-console.log("server api hi successfully")
-})
-
+app.listen(3000,()=>[
+    console.log("api hit successfully")
+])
 
 
 
