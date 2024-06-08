@@ -11,11 +11,11 @@ subapp.use((req,resp,next)=>{
     next()
 })
 subapp.get('/ms',(req,resp)=>{
-     resp.send('Hello from Subapp !')
+     resp.send(`Hello from Subapp ! mountpath - ${subapp.mountpath} `)
 })
 app.use('/sub',subapp)
 app.get('/',(req,resp)=>{
-    resp.send("Hello from Main App")
+    resp.send(`Hello from Main App ${app.mountpath} and ${subapp.mountpath}`)
 })
 subapp.use((req,res,next)=>{
     console.log(`Mounted on : ${subapp.mountpath}`)  //sub
