@@ -1,63 +1,35 @@
-// const express = require('express')
-// const app = express()
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
 
-// app.enable('x-powered-by')
+const app = express();
 
-// app.use((req,resp,next)=>{
-//     const xPowerdByEnabled = app.get('x-powered-by')
-//     console.log(`x-powered-by enabled : ${xPowerdByEnabled}`)
-//     next()
-// });
+// Define the custom HTML template engine
+app.engine('html', (filePath, options, callback) => {
+  // Read the HTML file from the filesystem
+  fs.readFile(filePath, 'utf-8', (err, content) => {
+    if (err) return callback(err);
 
-// app.disabled('x-powered-by');
+    // Replace placeholders with actual values
+    let rendered = content.replace(/{{\s*([^{}\s]+)\s*}}/g, (match, p1) => {
+      return options[p1] || '';
+    });
 
-// app.get('/',(req,resp)=>{
-//     resp.send('hello world')
-// })
+    return callback(null, rendered);
+  });
+});
 
-// const port = 3000
-// app.listen(port,()=>{
-//     console.log(`Serever is running on port ${port}`)
-// })
+// Set the view engine to use the custom HTML engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
 
-//second example 
+// Define a route
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Custom HTML Template Engine', message: 'Hello, world!' });
+});
 
-const express = require('express')
-const app = express()
-
-app.enable('trust proxy')
-
-app.use((req,resp,next)=>{
-    const trustproxyEnabled = !app.disabled('trust proxy')
-    console.log(`'trust proxy' enabled before disabled : ${trustproxyEnabled}`)
-    next()
-})
-app.disabled('trust proxy');
-app.use((req,resp,next)=>{
-const trustproxyEnabled = !app.disabled('trust proxy')
-console.log(`'trust proxy' enabled afetr disabled: ${trustproxyEnabled}`)
-next();
-})
-
-app.get('/',(req,resp)=>{
-    resp.send('Hello world !')
-})
-const port = 3000
-app.listen(3000,()=>{
-    console.log("server is running on port 3000}")
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Start the server
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
