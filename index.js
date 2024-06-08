@@ -1,41 +1,23 @@
-// Sure! Let's create an example using the EJS templating engine with Express.js. EJS (Embedded JavaScript) is a simple
-// templating language that lets you generate HTML markup with plain JavaScript.
+const express = require('express');
+const app = express();
 
-const Express = require('express')
-const app = Express();
+// Set a custom variable
+app.set('title', 'My Site');
 
-app.set('view engine','ejs')
-app.set('views','./views')
-
-app.get('/',(req,resp)=>{
-    resp.render('index',{title:"hey",message:'Hello there !'})
-})
-
-app.get('/render',(req,resp)=>{
-    app.render('index',{title:'Rendered',message:"this is rendered content"},(err,html)=>{
-      if(err){
-        resp.status(500).send('Error rendering the view')
-        return 
-      }  
-      console.log("html",html)
-      resp.send(html)
-    //   resp.send("hello")
-    })
-   
-})
-
-const port = 3000
-app.listen(3000,()=>{
-    console.log('Server api hit successfully ')
+// Middleware to log the custom variable
+app.use((req, res, next) => {
+    console.log('App title:', app.get('title'));
+    next();
 });
 
+// Define a route to show the app title
+app.get('/', (req, res) => {
+    res.send(`App title is: ${app.get('title')}`);
+});
 
-
-
-
-
-
-
-
-
-
+// Start the server
+const port = 3000;
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`App title is: ${app.get('title')}`);
+});
