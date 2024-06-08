@@ -1,35 +1,18 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+const express = require('express')
+const app = express()
+app.set('appName','My express App')
+app.set('port',3000)
 
-const app = express();
+app.get('/',(req,resp)=>{
+    const appName = app.get('appName')
+    const port = app.get('port')
+    const reGet = resp.get('port')
+    resp.send(`Welcome to appName ${appName} port is ${port} reGet 
+        is reget ${reGet}`)
 
-// Define the custom HTML template engine
-app.engine('html', (filePath, options, callback) => {
-  // Read the HTML file from the filesystem
-  fs.readFile(filePath, 'utf-8', (err, content) => {
-    if (err) return callback(err);
+})
 
-    // Replace placeholders with actual values
-    let rendered = content.replace(/{{\s*([^{}\s]+)\s*}}/g, (match, p1) => {
-      return options[p1] || '';
-    });
-
-    return callback(null, rendered);
-  });
-});
-
-// Set the view engine to use the custom HTML engine
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
-
-// Define a route
-app.get('/', (req, res) => {
-  res.render('index', { title: 'Custom HTML Template Engine', message: 'Hello, world!' });
-});
-
-// Start the server
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+const port = app.get('port')
+app.listen(port,()=>{
+    console.log("api hit successfully")
+})
