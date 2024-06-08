@@ -1,33 +1,29 @@
-// The app.param([name], callback) method in Express.js allows you to define middleware for route parameters. 
-// This method is particularly useful when you want to perform preprocessing on route parameters before they 
-// are handled by route handlers.
-//  Here's an example to illustrate its usage:
+const express = require('express');
+const app = express();
 
-const express = require('express')
-const app = express()
+// Mount the app on a specific path
+const mountPath = '/api';
+const subApp = express();
 
-app.param('name',(req,resp,next,name)=>{
-    if(!name){
-      return name
-    }else{
-        console.log("name param get",name)
-        req.name = name
-        next()
-    }
-})
+subApp.get('/', (req, res) => {
+    res.send('Hello from the sub app!');
+});
 
-app.route('/param/:name').get((req,resp)=>{
-    resp.send(`Api hit successfully on prama name ${req.name}`)
-})
+// Use the subApp on the '/api' path
+app.use(mountPath, subApp);
 
-app.listen(3000,()=>[
-    console.log("api hit successfully")
-])
+app.get('/', (req, res) => {
+    res.send('Hello from the main app!');
+});
 
+// Endpoint to get the path of the mounted subApp
+app.get('/mounted-path', (req, res) => {
+    res.send(`SubApp is mounted on: ${subApp.path()} himself- ${app.path()}`); //app.path() nahi h to nahi ayga par
+});
 
-
-
-
-
-
+// Start the server
+const port = 3000;
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
 
