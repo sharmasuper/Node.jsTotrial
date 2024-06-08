@@ -1,34 +1,25 @@
+// The app.disable(name) method in Express.js is used to disable a configuration setting identified by name. 
+// This method is the counterpart to app.enable(name), which enables a configuration setting.
+// Here's an example demonstrating how to use app.disable(name)
+
+
 const express = require('express')
 const app = express()
+app.enable('x-powered-by');
 
-const logRequest = (req,resp,next) =>{
-    console.log(`Recived ${req.method} request for ${req.url} `)
-    next();
-}
-
-const authenticate = (req,res,next) =>{
-    const authenticate = true;
-    if(authenticate){
-        next()
-    }else{
-    res.status(401).send("unauthenticate")
-    }
-}
-
-app.delete('/recource/:id',logRequest,authenticate,(req,resp)=>{
-    const resourceId = req.params.id;
-    console.log(`deleting resource with Id: ${resourceId}`)
-    resp.send(`resource with Id ${resourceId} has been deleted`)
+app.use((req,res,next)=>{
+    const xPoweredByEnabled = app.get('x-powered-by')
+    console.log(`'x-powered-by' enabled : ${xPoweredByEnabled}`);
+    next()
 })
-const port = 3000
-app.listen(port,()=>{
-    console.log(`Server is running on port ${port}`)
+// app.disable('x-powered-by')
+
+app.get('/',(req,resp)=>{
+    resp.send('Hello world')
 })
+const port = 3000;
 
-
-
-
-
-
-
+app.listen(3000,()=>{
+    console.log(`server is running on port ${port}`)
+})
 
