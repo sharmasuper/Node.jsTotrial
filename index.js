@@ -1,33 +1,30 @@
 const express = require('express')
 const app = express()
 
-app.use((req,resp,next)=>{
-    console.log(`${req.method} ${req.url}`)
-    next()
-})
-
-app.all('/example',(req,resp,next)=>{
-    console.log('this runs for all http methods on/example')
+const logRequest = (req,resp,next) =>{
+    console.log(`Recived ${req.method} request for ${req.url} `)
     next();
+}
+
+const authenticate = (req,res,next) =>{
+    const authenticate = true;
+    if(authenticate){
+        next()
+    }else{
+    res.status(401).send("unauthenticate")
+    }
+}
+
+app.delete('/recource/:id',logRequest,authenticate,(req,resp)=>{
+    const resourceId = req.params.id;
+    console.log(`deleting resource with Id: ${resourceId}`)
+    resp.send(`resource with Id ${resourceId} has been deleted`)
+})
+const port = 3000
+app.listen(port,()=>{
+    console.log(`Server is running on port ${port}`)
 })
 
-app.get('/example',(req,resp)=>{
-    resp.send('Get request to/example')
-})
-
-app.post('/example',(req,resp)=>{
-    resp.send('Post request to/example')
-})
-
-app.put('/example',(req,resp)=>{
-    resp.send('Put request to/example')
-})
-app.delete('/example',(req,resp)=>{
-    resp.send("Delete request to/example")
-})
-app.listen(3000,()=>{
-    console.log('Server is running on port 3000')
-})
 
 
 
