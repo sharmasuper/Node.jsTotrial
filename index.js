@@ -1,23 +1,37 @@
-// The express.urlencoded([options]) middleware in Express.js is used to parse incoming request bodies that are URL-encoded. 
-// This is commonly used for form submissions where the form data 
-// is encoded as key-value pairs and sent in the HTTP request body.
+const express = require('express')
+const app = express()
+
+app.use((req,resp,next)=>{
+    console.log(`${req.method} ${req.url}`)
+    next()
+})
+
+app.all('/example',(req,resp,next)=>{
+    console.log('this runs for all http methods on/example')
+    next();
+})
+
+app.get('/example',(req,resp)=>{
+    resp.send('Get request to/example')
+})
+
+app.post('/example',(req,resp)=>{
+    resp.send('Post request to/example')
+})
+
+app.put('/example',(req,resp)=>{
+    resp.send('Put request to/example')
+})
+app.delete('/example',(req,resp)=>{
+    resp.send("Delete request to/example")
+})
+app.listen(3000,()=>{
+    console.log('Server is running on port 3000')
+})
 
 
-const express = require('express');
 
-const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Use express.urlencoded() middleware to parse application/x-www-form-urlencoded content type
-app.use(express.urlencoded({ extended: true }));
 
-// Example route to handle POST request with URL-encoded data
-app.post('/formdata', (req, res) => {
-    const formData = req.body;
-    console.log('Received form data:', formData);
-    res.send(`Received form data: ${JSON.stringify(formData)}`);
-});
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+
