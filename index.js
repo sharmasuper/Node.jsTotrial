@@ -1,29 +1,41 @@
-const express = require('express');
-const app = express();
+// Sure! Let's create an example using the EJS templating engine with Express.js. EJS (Embedded JavaScript) is a simple
+// templating language that lets you generate HTML markup with plain JavaScript.
 
-// Mount the app on a specific path
-const mountPath = '/api';
-const subApp = express();
+const Express = require('express')
+const app = Express();
 
-subApp.get('/', (req, res) => {
-    res.send('Hello from the sub app!');
+app.set('view engine','ejs')
+app.set('views','./views')
+
+app.get('/',(req,resp)=>{
+    resp.render('index',{title:"hey",message:'Hello there !'})
+})
+
+app.get('/render',(req,resp)=>{
+    app.render('index',{title:'Rendered',message:"this is rendered content"},(err,html)=>{
+      if(err){
+        resp.status(500).send('Error rendering the view')
+        return 
+      }  
+      console.log("html",html)
+      resp.send(html)
+    //   resp.send("hello")
+    })
+   
+})
+
+const port = 3000
+app.listen(3000,()=>{
+    console.log('Server api hit successfully ')
 });
 
-// Use the subApp on the '/api' path
-app.use(mountPath, subApp);
 
-app.get('/', (req, res) => {
-    res.send('Hello from the main app!');
-});
 
-// Endpoint to get the path of the mounted subApp
-app.get('/mounted-path', (req, res) => {
-    res.send(`SubApp is mounted on: ${subApp.path()} himself- ${app.path()}`); //app.path() nahi h to nahi ayga par
-});
 
-// Start the server
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+
+
+
+
+
+
 

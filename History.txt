@@ -523,9 +523,16 @@ lecture -7 Routers
 lecture - 8 Connecting to MYSql database
 
 
+   DIFFERENCE BETWEEN resp.render() method and app.render() method
 
 
 
-
+app.render()
+Purpose: app.render is used to render a view with a given set of options and a callback. It doesn't send the rendered HTML to the client directly. Instead, it passes the rendered HTML to the provided callback function.
+Context: Used when you need to render a view and then perform additional processing on the rendered HTML before sending it to the client or using it in some other way (e.g., sending it as an email).
+res.render()
+Purpose: res.render is used to render a view with a given set of options and sends the rendered HTML directly to the client as the response.
+Context: Commonly used within route handlers to render and send a view to the client.
+Example to Illustrate the Differences
 
 
