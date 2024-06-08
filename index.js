@@ -1,27 +1,38 @@
+// In Express.js, the app.on('mount', callback(parent)) method is an event listener that gets triggered when 
+// a sub-application is mounted onto a parent application. This is useful when you want to execute some logic 
+// whenever your sub-application is added to a parent app. 
+// Here's an example demonstrating how to use it:
 
-// In Express.js, the app.mountpath property contains the path pattern(s) on which a sub-app was mounted. 
-// When you create a sub-application and mount it on a specific path, 
-// you can use app.mountpath to retrieve that path
 
-const express = require('express')
+const express  = require('express')
 const app = express()
+
 const subapp = express()
-subapp.use((req,resp,next)=>{
-    console.log('subapp Middleware ');
-    next()
+
+subapp.get('/',(req,resp)=>{
+    resp.send('Hello from sub-application')
 })
-subapp.get('/ms',(req,resp)=>{
-     resp.send(`Hello from Subapp ! mountpath - ${subapp.mountpath} `)
+
+subapp.on('mount',(parent)=>{
+    console.log('Sub-application has been mounted')
+    console.log('Parent app :',parent)
 })
-app.use('/sub',subapp)
+app.use('/sub',subapp);
 app.get('/',(req,resp)=>{
-    resp.send(`Hello from Main App ${app.mountpath} and ${subapp.mountpath}`)
+    resp.send('Hello from the main application')
 })
-subapp.use((req,res,next)=>{
-    console.log(`Mounted on : ${subapp.mountpath}`)  //sub
-    next()
+
+
+const port = 3000
+app.listen(3000,()=>{
+console.log("server api hi successfully")
 })
-const port = 3000;
-app.listen(port,()=>{
-    console.log('server is running on port 3000')
-})
+
+
+
+
+
+
+
+
+
