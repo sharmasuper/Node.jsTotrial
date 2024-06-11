@@ -1,32 +1,41 @@
+// const express = require('express')
+// const app = express()
+
+// app.get('/',(req,resp)=>{
+//     resp.send('Hello,world')
+// })
+// app.get('/error',(req,resp)=>{
+//     throw new Error('This is a sample error !')
+// })
+
+// const port = 3000
+// app.listen(3000,()=>{
+//     console.log('api hit successfully')
+// })
+
 const express = require('express')
 const app = express()
 
-const router = express.Router()
+app.use(express.json())
 
-const logRequestDetails = (req,res,next) =>{
-    console.log(`Method: ${req.Method} ,URL : ${req.url}`)
-    next()
-}
-
-router.use(logRequestDetails)
-router.get('/',(req,resp)=>{
-    resp.send('Welcome to the home page')
+app.get('/',(req,resp)=>{
+    resp.send('Hello,world !')
+})
+app.get('/error',(req,resp)=>{
+    throw new Error('This is a sample error') 
 })
 
-router.get('/about',(req,resp)=>{
-    resp.send('This is the about page')
+app.use((err,req,res,next)=>{
+    console.error("show error",err.stack);
+    res.status(500).json({
+        status:'error',
+        message:err.message || 'Internnal Srver Error'
+    })
 })
-
-app.use('/router',router)
-
-
 const port = 3000
-app.listen(port,()=>{
-    console.log('Server is running on port 3000')
+
+app.listen(3000,()=>{
+    console.log("api hit successfully")
 })
-
-
-
-
 
 
