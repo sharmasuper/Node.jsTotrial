@@ -1,29 +1,43 @@
-const express = require('express');
-const app = express();
+// Overriding the Express API in an Express.js application can be useful when you need to add 
+// custom behavior or modify the default behavior of Express.js methods. 
+// This technique involves extending or wrapping existing methods with your own functionality.
 
-// Built-in middleware to parse JSON bodies
-app.use(express.json());
+// Below is an example demonstrating how to override the res.send method in an Express.js application to add 
+// a custom header to every response.
 
-// Built-in middleware to parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true }));
 
-// Built-in middleware to serve static files from the 'public' directory
-app.use(express.static('public'));
+const express = require('express')
+const app = express()
+app.use((req,res,next)=>{
+    const orignalSend = res.send
+    res.send = function(body){
+   res.set('X-Custom-Header','This is a custom header')
+   return  orignalSend.call(this, body);
+    }
+   next()
+})
 
-// Sample route to demonstrate JSON parsing
-app.post('/data', (req, res) => {
-  console.log(req.body); // The parsed JSON data
-  res.send('JSON data received');
-});
+app.get('/',(req,resp)=>{
+    resp.send('Hello World !');
+})
 
-// Sample route to demonstrate URL-encoded body parsing
-app.post('/form', (req, res) => {
-  console.log(req.body); // The parsed form data
-  res.send('Form data received');
-});
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+const port = 3000
+app.listen(3000,()=>{
+    console.log('server is running on port-3000')
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
