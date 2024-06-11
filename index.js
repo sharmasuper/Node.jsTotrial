@@ -1,23 +1,34 @@
-const express = require('express');
-const app = express();
+//Application-level middleware
 
-// Set a custom variable
-app.set('title', 'My Site');
+const express = require('express')
+const app = express()
 
-// Middleware to log the custom variable
-app.use((req, res, next) => {
-    console.log('App title:', app.get('title'));
-    next();
-});
+const requestTimeLogger = (req,resp,next) =>{
+    req.requestTime = new Date().toISOString()
+    req.ms = "sharma"
+    console.log(`Request ${req.ms} recived at ${req.requestTime}`)
+    next()
+}
 
-// Define a route to show the app title
-app.get('/', (req, res) => {
-    res.send(`App title is: ${app.get('title')}`);
-});
+app.use(requestTimeLogger);
 
-// Start the server
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-    console.log(`App title is: ${app.get('title')}`);
-});
+app.get('/',(req,resp)=>{
+    resp.send(`Hello World ! request recived at : ${req.requestTime}`)
+})
+
+app.get('/about', (req, res) => {
+    res.send(`About Page. Request received at: ${req.requestTime}`);
+  });
+
+  const PORT = 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+
+
+
+
+
+
+
+
