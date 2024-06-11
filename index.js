@@ -1,31 +1,29 @@
-//Application-level middleware
-
 const express = require('express')
 const app = express()
 
-const requestTimeLogger = (req,resp,next) =>{
-    req.requestTime = new Date().toISOString()
-    req.ms = "sharma"
-    console.log(`Request ${req.ms} recived at ${req.requestTime}`)
+const router = express.Router()
+
+const logRequestDetails = (req,res,next) =>{
+    console.log(`Method: ${req.Method} ,URL : ${req.url}`)
     next()
 }
 
-app.use(requestTimeLogger);
-
-app.get('/',(req,resp)=>{
-    resp.send(`Hello World ! request recived at : ${req.requestTime}`)
+router.use(logRequestDetails)
+router.get('/',(req,resp)=>{
+    resp.send('Welcome to the home page')
 })
 
-app.get('/about', (req, res) => {
-    res.send(`About Page. Request received at: ${req.requestTime}`);
-  });
+router.get('/about',(req,resp)=>{
+    resp.send('This is the about page')
+})
 
-  const PORT = 3000;
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-  });
+app.use('/router',router)
 
 
+const port = 3000
+app.listen(port,()=>{
+    console.log('Server is running on port 3000')
+})
 
 
 
