@@ -1,41 +1,29 @@
-// const express = require('express')
-// const app = express()
+const express = require('express');
+const app = express();
 
-// app.get('/',(req,resp)=>{
-//     resp.send('Hello,world')
-// })
-// app.get('/error',(req,resp)=>{
-//     throw new Error('This is a sample error !')
-// })
+// Built-in middleware to parse JSON bodies
+app.use(express.json());
 
-// const port = 3000
-// app.listen(3000,()=>{
-//     console.log('api hit successfully')
-// })
+// Built-in middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
 
-const express = require('express')
-const app = express()
+// Built-in middleware to serve static files from the 'public' directory
+app.use(express.static('public'));
 
-app.use(express.json())
+// Sample route to demonstrate JSON parsing
+app.post('/data', (req, res) => {
+  console.log(req.body); // The parsed JSON data
+  res.send('JSON data received');
+});
 
-app.get('/',(req,resp)=>{
-    resp.send('Hello,world !')
-})
-app.get('/error',(req,resp)=>{
-    throw new Error('This is a sample error') 
-})
+// Sample route to demonstrate URL-encoded body parsing
+app.post('/form', (req, res) => {
+  console.log(req.body); // The parsed form data
+  res.send('Form data received');
+});
 
-app.use((err,req,res,next)=>{
-    console.error("show error",err.stack);
-    res.status(500).json({
-        status:'error',
-        message:err.message || 'Internnal Srver Error'
-    })
-})
-const port = 3000
-
-app.listen(3000,()=>{
-    console.log("api hit successfully")
-})
-
-
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
