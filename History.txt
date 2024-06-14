@@ -536,3 +536,79 @@ Context: Commonly used within route handlers to render and send a view to the cl
 Example to Illustrate the Differences
 
 
+EXPRESS JS- DATABASE INTREGATION
+Express.js is a popular Node.js  web framework that allows you to build web applications quickly and efficiently.
+step1 = lets come into mongodb.com
+step2 = login in mongodb //create culster and data base and connect
+wLcS9TRwlil9rrLH
+ms6375349671
+
+
+string
+mongodb+srv://ms6375349671:<password>@cluster0.ys4iioh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+
+
+/////////////////////////////////////////////////////////////mongod connect code//////////////////
+
+const mongoose = require('mongoose')
+const express = require('express')
+const app = express()
+const DB = 'mongodb+srv://ms6375349671:wLcS9TRwlil9rrLH@cluster0.ys4iioh.mongodb.net/mernStack?retryWrites=true&w=majority&appName=Cluster0'
+
+mongoose.connect(DB
+//  useNewUrlParse :true,
+//  useCreateIndex :true,
+//  useUnifiedTopology:true,
+//  useFindAndModify:false
+).then(()=>{
+  console.log('connection successfully')
+}).catch((err)=>{
+  console.log("show error",err)
+})
+
+const middleware = (req,res,next)=>{
+  console.log('Hello my mddleware')
+  next()
+}
+
+app.get("/",middleware,(req,res)=>{
+    res.send("api hit successfully")
+})
+app.listen(3000,()=>{
+  console.log("api hit successfully")
+})
+
+
+////////////////////////////////close code/////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
