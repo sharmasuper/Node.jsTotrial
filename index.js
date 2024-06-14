@@ -1,38 +1,24 @@
+const express = require('express') 
 const mongoose = require('mongoose')
-const express = require('express')
+const  bodyParser = require('body-parser')
+const dotenv = require('dotenv')
 const app = express()
-const DB = 'mongodb+srv://ms6375349671:wLcS9TRwlil9rrLH@cluster0.ys4iioh.mongodb.net/mernStack?retryWrites=true&w=majority&appName=Cluster0'
-
-mongoose.connect(DB
-//  useNewUrlParse :true,
-//  useCreateIndex :true,
-//  useUnifiedTopology:true,
-//  useFindAndModify:false
-).then(()=>{
-  console.log('connection successfully')
-}).catch((err)=>{
-  console.log("show error",err)
+const route = require('./routes/userRoute')
+app.use(bodyParser.json())
+ 
+dotenv.config(); 
+const PORT  = process.env.PORT || 5000  
+const MONGOURL = process.env.MONGO_URL; 
+// console.log(MONGOURL)   
+mongoose.connect(MONGOURL).then(()=>{
+    console.log("MongoDb Connect successfully")   
+    app.listen(PORT,()=>{
+        console.log(`server is running on port on - ${PORT} `)
+    })
+}).catch((error)=>{
+    console.log("show error",error)
 })
 
-const middleware = (req,res,next)=>{
-  console.log('Hello my mddleware')
-  next()
-}
-
-app.get("/",middleware,(req,res)=>{
-    res.send("api hit successfully")
-})
-app.listen(3000,()=>{
-  console.log("api hit successfully")
-})
-
-
-
-
-
-
-
-
-
+app.use('/api/user',route)
 
 
