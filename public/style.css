@@ -1,0 +1,46 @@
+.recipes{
+    display: flex;
+   flex-wrap: wrap;
+   text-align: center;
+   row-gap: 3px;
+   column-gap: 20px;
+}
+.recipes li img{
+    width:200px;
+    height:100px;
+    border: 1px solid green;
+    list-style-type: none;
+    text-decoration: none;
+    
+}
+.parentDiv{
+    width: 500px;
+    height:300px;
+}
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* home page style */
+
+.smoothie {
+ width: 200px;
+ height:200px;
+
+}
+
+.smoothie img{
+    width:250px;
+    height:200px;
+}
+
+.headings a{
+    background-color: rgb(67, 67, 185);
+    border:1px solid black;
+    color:rgb(46, 12, 12);
+    width:50px;
+    height:20px;
+}
+
