@@ -17,5 +17,17 @@ const userSchema = new mongoose.Schema({
 
     }
 })
+//fire a function after doc saved to db
+//this is mmongoose middleware
+userSchema.post('save', function(doc, next) {
+    console.log('new user was created & saved ',doc)
+  next()
+})
+//fire a function before doc saved to db
+userSchema.pre('save',function(next){
+ console.log('user about to be created & saved ',this)
+ next()
+})
+
 const user = mongoose.model('users',userSchema)
 module.exports = user 
