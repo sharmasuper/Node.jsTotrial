@@ -581,8 +581,9 @@ app.listen(3000,()=>{
 
 
 ////////////////////////////////close code/////////////////////////////////////////////////
-
-
+npm i bcrypt 
+brypt middleware conver passworld in random number in string such as - 
+test123 = (hashing algoritham) => A6g34934md
 
 
 
