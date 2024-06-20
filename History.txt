@@ -585,6 +585,61 @@ npm i bcrypt
 brypt middleware conver passworld in random number in string such as - 
 test123 = (hashing algoritham) => A6g34934md
 
+//JSON WEN TOKEN
+loginForm => email and password => server =>check creds in database
+=> if match => generate token => send token to client(login from)
+    login form <= JWT <= server
+
+//JWT signing
+HEADERS =>
+         tells the server what type pf signature is being used(meta)
+
+Payload =>
+         Used to Identify the user (ex- contains user id)
+signature =>
+           Makes the token secure (like a stamp of authenticity)
+
+
+
+JWT signing
+                    HEADERS   <= 
+                                     hashed together => Secret ('secure secret string) 
+                    Payload   <=           |
+                                           |
+                                        signature
+
+-- hashed together create a token hashed together signature -- 
+and it path is => Headers.payload.signature
+
+but autual resulting token is => random-path
+
+
+loginForm ===> request for/smoothies ====> server (verify the JWT Identify the User)
+                     {JWT}
+
+
+JSON WEB TOKEN
+
+sign up Form  => email and password  => server
+                                       1 => hash pw and store in db 
+         sign up form                   <==      2  => instandly log the user in (create a jwt for them)
+                                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

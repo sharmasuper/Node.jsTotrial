@@ -9,6 +9,3 @@ router.post('/login',authController.login_post)
 
 module.exports = router 
 
-
-
-
