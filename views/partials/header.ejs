@@ -9,5 +9,14 @@
 <body>
     <nav>
         <a href="/">Ninja Smoothies</a>
+        <!-- <ul style="width: auto;display: flex; justify-content: space-between;align-items: center; list-style-type: none;"> -->
+            <% if(user) {%>
+            <li>Welcome , <%= user.email %></li>
+            <li><a href="/logout">logout</a></li> <br/>
+            <% } else {%>
+            <li><a href="/login"> logIn</a></li> <br/>
+            <li><a href="/signup" class="btn">Sign up</a></li> <br/>
+            <% } %>
+        <!-- </ul> -->
     </nav>
  

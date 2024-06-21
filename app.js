@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const route = require('./routes/authRoutes')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const { requireAuth, checkUser } = require('./middleware/authMiddleware')
 const app = express()
 app.use(bodyParser.json())
 // app.use(express.json())
@@ -21,11 +22,13 @@ mongoose.connect(process.env.MONGO_URL,{}).then(()=>{
 }).catch((error)=>{
     console.log("Show connect error "+error)
 })
+//routes
+app.get("*",checkUser);
 app.get('/',(req,res)=>{
     res.render('home') 
 }) 
 
-app.get('/smoothies',(req,res)=>res.render('smoothies'))
+app.get('/smoothies',requireAuth,(req,res)=>res.render('smoothies'))
 app.get('/set-cookies',(req,res)=>{
    // res.setHeader('Set-Cookie','newUser=true')
    res.cookie('newUser',false)
@@ -40,8 +43,4 @@ res.json(cookies)
 
 })
 
-
-
 app.use(route)
-
-
