@@ -1,118 +1,63 @@
-//example - 1
-// const mongoose = require('mongoose')
-// const {Schema} = mongoose
-
-// mongoose.connect('mongodb://localhost:27017/test').then(()=>{
-//     console.log("mongodb connected successfully")
-// })
-// .catch((err)=>{
-//     console.log("show mongon connected error ",err)
-// })
-
-// const userSchema = new Schema({
-//     firstName : String,
-//     lastName : String,
-//     email : String,
-//     age : Number
-// })
-
-// //instance method
-// userSchema.methods.getFullName = function(){
-//     return `${this.firstName} and ${this.lastName}`;
-// }
-
-// userSchema.methods.canVote = function (){
-//     return this.age >= 18
-// }
-
-// const User = mongoose.model('User',userSchema);
-
-// async function runExample(){
-//     await mongoose.connection.dropDatabase()
-//     try{
-//     const user = new User({
-//         firstName:"mohit",
-//         lastName : "Doe",
-//         email : 'john@gmail.com',
-//         // age : 2
-//         age : 25
-//     })
-//   const seendata =  await user.save();
-//   console.log(seendata)
-//   //call instance methods
-//   console.log('Full Name : ',user.getFullName())
-//   console.log('can vote :',user.canVote()) ;
-
-//     }catch(error){
-//         console.log("show docs create error",error)
-//     }
-// }
-// runExample()
-
-
-//example -2 
+// Instance methods in Mongoose are methods that you define on the schema and can be called on 
+// instances of the model. 
+// They are useful for encapsulating logic that applies to individual documents.
 
 const mongoose = require('mongoose')
 const {Schema} = mongoose
+
 mongoose.connect('mongodb://localhost:27017/test')
 .then(()=>{
     console.log("mongoose connected successfully")
-}).catch((error)=>{
-    console.log("mongoose connected error ",error)
 })
 
+.catch((error)=>{
+    console.log("show connected error ",error)
+})
 
+//userSchema create
 const userSchema = new Schema({
     fristName : String,
     lastName : String,
     email : String,
     age : Number
-})
-
-//Define an Instance method
-userSchema.methods.getFullName = function (){
-   return `${this.fristName} and ${this.lastName}` 
+});
+//define a static method to find users by email
+userSchema.statics.findByEmail = function(email){
+    // return  this.findOne({email:email}); 
+    return  this.findOne({email:email}); 
 }
 
-userSchema.methods.canVote = function (){
-    return this.age >= 18
+userSchema.statics.findAllAboveAge = function(age){
+    return this.find({age : {$gt : age}})
 }
 
-const User = mongoose.model('User',userSchema);
+const User = mongoose.model('User',userSchema); 
 
-async function runExample (){
-    await mongoose.connection.dropDatabase()
-    try{
-        const user = new User({
-            fristName : "mohit",
-            lastName : "Doe",
-            email : 'john@gmail.com',
-            age : 25
-        })
-        const seendata = await user.save();
-        console.log(seendata)
-        //call instance methods
-        console.log('Full Name : ',user.getFullName())
-        console.log('can vote :',user.canVote()) ;
-//second user add ==>
-        const youngerUser =new User({
-            fristName : 'Jane',
-            lastName : 'Smith',
-            email : 'jane@gmail.com',
-            age : 16
-        })
-        const secondSeenDate = await youngerUser.save();
-        console.log(secondSeenDate)  
-        console.log('Full Name :',youngerUser.getFullName())
-        console.log('Can Vote :',youngerUser.canVote())
-        mongoose.disconnect()
-    }catch(error){
-        console.log("show docs create error",error)
-    } 
+
+async function runExample(){
+    await mongoose.connection.dropDatabase();
+    const users = [
+        {fristName : 'John',lastName : 'Doe',email : 'John@gmail.com',age:25},
+        {fristName: "Jane",lastName:"Samith",email :"Jane@gmail.com",age:30},
+        {fristName:"Alice",lastName : 'JohnName',email:"alice.johnson@gmail.com"},
+        {fristName : 'Bob',lastName : 'Brown',email : 'bob.brown@gmail.com'}
+    ];
+
+ await User.insertMany(users)
+ 
+ //call static methods 
+ const userByEmail = await User.findByEmail('John@gmail.com');
+ console.log('User found by email :',userByEmail)
+
+ const userAboveAge = await User.findAllAboveAge(20)
+ console.log('User above age 20 :',userAboveAge);
+
+//  disconnect from the database
+ mongoose.disconnect()
 }
-runExample().catch((error)=>{
-    console.log("Show error second",error)
-})
+
+runExample().catch(err=>console.log(err));
+
 
 
 
