@@ -1,127 +1,118 @@
+//example - 1
+// const mongoose = require('mongoose')
+// const {Schema} = mongoose
+
+// mongoose.connect('mongodb://localhost:27017/test').then(()=>{
+//     console.log("mongodb connected successfully")
+// })
+// .catch((err)=>{
+//     console.log("show mongon connected error ",err)
+// })
+
+// const userSchema = new Schema({
+//     firstName : String,
+//     lastName : String,
+//     email : String,
+//     age : Number
+// })
+
+// //instance method
+// userSchema.methods.getFullName = function(){
+//     return `${this.firstName} and ${this.lastName}`;
+// }
+
+// userSchema.methods.canVote = function (){
+//     return this.age >= 18
+// }
+
+// const User = mongoose.model('User',userSchema);
+
+// async function runExample(){
+//     await mongoose.connection.dropDatabase()
+//     try{
+//     const user = new User({
+//         firstName:"mohit",
+//         lastName : "Doe",
+//         email : 'john@gmail.com',
+//         // age : 2
+//         age : 25
+//     })
+//   const seendata =  await user.save();
+//   console.log(seendata)
+//   //call instance methods
+//   console.log('Full Name : ',user.getFullName())
+//   console.log('can vote :',user.canVote()) ;
+
+//     }catch(error){
+//         console.log("show docs create error",error)
+//     }
+// }
+// runExample()
+
+
+//example -2 
+
 const mongoose = require('mongoose')
 const {Schema} = mongoose
-mongoose.connect('mongodb://localhost:27017/myNewDatabase').then(()=>{
+mongoose.connect('mongodb://localhost:27017/test')
+.then(()=>{
     console.log("mongoose connected successfully")
-}).catch((err)=>{
-    console.log("mongoose connected err",err)
+}).catch((error)=>{
+    console.log("mongoose connected error ",error)
 })
 
-//create schema 
-const customIdSchema = new Schema({
-    _id : Number  //_id : false means _id is disable
+
+const userSchema = new Schema({
+    fristName : String,
+    lastName : String,
+    email : String,
+    age : Number
 })
 
-const customIdModel = mongoose.model('CustomIdModel',customIdSchema)
+//Define an Instance method
+userSchema.methods.getFullName = function (){
+   return `${this.fristName} and ${this.lastName}` 
+}
 
+userSchema.methods.canVote = function (){
+    return this.age >= 18
+}
 
-async function customIdExample(_id){
+const User = mongoose.model('User',userSchema);
+
+async function runExample (){
+    await mongoose.connection.dropDatabase()
     try{
-        const customDoc = new customIdModel({_id});
-        await customDoc.save();
-              
-        console.log("id is that",customDoc._id) 
-
-    }catch(err){
-        console.log("show err custom Id",err)
-    }
+        const user = new User({
+            fristName : "mohit",
+            lastName : "Doe",
+            email : 'john@gmail.com',
+            age : 25
+        })
+        const seendata = await user.save();
+        console.log(seendata)
+        //call instance methods
+        console.log('Full Name : ',user.getFullName())
+        console.log('can vote :',user.canVote()) ;
+//second user add ==>
+        const youngerUser =new User({
+            fristName : 'Jane',
+            lastName : 'Smith',
+            email : 'jane@gmail.com',
+            age : 16
+        })
+        const secondSeenDate = await youngerUser.save();
+        console.log(secondSeenDate)  
+        console.log('Full Name :',youngerUser.getFullName())
+        console.log('Can Vote :',youngerUser.canVote())
+        mongoose.disconnect()
+    }catch(error){
+        console.log("show docs create error",error)
+    } 
 }
-
-customIdExample("10")
-
-/////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CHATGPT EXAMPLE  ---- chatgpt example ========\\\\
-///////////////////////////////////////////////////////////////
-
-
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
-
-// Connect to MongoDB (update the URI with your connection string)
-mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true });
-
-// Overwriting Mongoose's default _id with your own _id
-const customIdSchema = new Schema({
-  _id: Number // Overwrite Mongoose's default _id
-});
-
-const CustomIdModel = mongoose.model('CustomIdModel', customIdSchema);
-
-async function customIdExample() {
-  try {
-    const customDoc = new CustomIdModel();
-    // This will throw an error because _id is not set
-    await customDoc.save(); 
-  } catch (err) {
-    console.error('Error:', err.message); // document must have an _id before saving
-  }
-
-  const customDoc = new CustomIdModel({ _id: 1 });
-  await customDoc.save(); // Works because _id is set
-  console.log('Saved customDoc with _id:', customDoc._id);
-}
-
-// Disabling _id in subdocuments
-const nestedSchemaWithoutId = new Schema(
-  { name: String },
-  { _id: false } // Disable _id
-);
-
-const schemaWithSubdocs = new Schema({
-  subdoc: nestedSchemaWithoutId,
-  docArray: [nestedSchemaWithoutId]
-});
-
-const Test = mongoose.model('Test', schemaWithSubdocs);
-
-async function subdocsExample() {
-  await Test.create({
-    subdoc: { name: 'test 1' },
-    docArray: [{ name: 'test 2' }]
-  });
-
-  const result = await Test.findOne().lean();
-  console.log('Result:', result);
-}
-
-// Disable _id using alternative syntax
-const alternativeNestedSchemaWithoutId = new Schema({
-  _id: false, // Disable _id
-  name: String
-});
-
-const alternativeSchemaWithSubdocs = new Schema({
-  subdoc: alternativeNestedSchemaWithoutId,
-  docArray: [alternativeNestedSchemaWithoutId]
-});
-
-const AlternativeTest = mongoose.model('AlternativeTest', alternativeSchemaWithSubdocs);
-
-async function alternativeSubdocsExample() {
-  await AlternativeTest.create({
-    subdoc: { name: 'test 1' },
-    docArray: [{ name: 'test 2' }]
-  });
-
-  const result = await AlternativeTest.findOne().lean();
-  console.log('Result:', result);
-}
-
-// Run examples
-async function runExamples() {
-  await mongoose.connection.dropDatabase(); // Clear the database before running examples
-
-  await customIdExample();
-  await subdocsExample();
-  await alternativeSubdocsExample();
-
-  mongoose.disconnect();
-}
-
-runExamples().catch(err => console.error(err));
-
-
-
+runExample().catch((error)=>{
+    console.log("Show error second",error)
+})
 
 
 
