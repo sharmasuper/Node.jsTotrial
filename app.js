@@ -1,55 +1,75 @@
-// Indexes in Mongoose (and MongoDB) are used to improve the efficiency of query operations
-//  by allowing the database to find and sort records faster.
-//  You can create indexes on fields to optimize queries and ensure unique constraints.
-// Here is an example demonstrating how to define indexes in Mongoose, including a unique index and a compound index.
+// Virtuals in Mongoose are document properties that are not stored in the database but are
+//  computed on the fly. They are useful for defining derived properties that you want to include 
+// in your documents without actually storing them in the database.
 
 const mongoose = require('mongoose')
 const {Schema} = mongoose
-
 mongoose.connect('mongodb://localhost:27017/mydatabase')
 .then(()=>{
-    console.log("mongoose connected successfully")
+    console.log("mongoose connect successfully")
 })
-.catch((err)=>{
-    console.log("mongoose error ",err)
+.catch((error)=>{
+    console.log("mongoose connected error ",error)
 })
 
 const userSchema = new Schema({
-    firstName : {type : String,required : true },
-    lastName : {type : String,required : true},
-    email : {type : String ,required : true,unique : true},
-    age : {type: Number , index : true} //single field index on age
+    fristName : {type : String , required : true},
+    lastName : {type : String , required : true},
+    email : {type : String , required : true,unique:true},
+    dateOfBirth : {type : Date , required : true}
+});
+
+userSchema.virtual('fullName').get(function(){
+    return `${this.fristName} ${this.lastName}` 
+})
+
+//virtual for age 
+
+userSchema.virtual('age').get(function(){
+    const ageDifMS = Date.now() - this.dateOfBirth.getTime();
+    const ageDate = new Date(ageDifMS); //milisconds from epoch
+
+   return Math.abs(ageDate.getUTCFullYear() - 1970);
 
 })
 
-//Compound index on firstName and LastName 
-userSchema.index({firstName : 1,LastName : 1})
+//Ensure virtual fields are serialized 
+
+userSchema.set('toJSON',{virtuals:true});
+userSchema.set('toObject',{virtuals:true});
+
 const User = mongoose.model('User',userSchema);
 
-async function run (){
+async function run(){
     try{
-        await User.deleteMany({});
-        await User.create([
-            { firstName: 'John', lastName: 'Doe', email: 'john@example.com', age: 25 },
-            { firstName: 'Jane', lastName: 'Doe', email: 'jane@example.com', age: 28 },
-            { firstName: 'Jim', lastName: 'Beam', email: 'jim@example.com', age: 35 }
-          ]); 
-        
-       const userByEmail = await User.findOne({email : 'john@example.com'})
-       console.log('user found by email :',userByEmail) ;
+       //ensoure the database connection is open
+       await mongoose.connection
        
-       const userByAge = await User.find({age : {$gte : 30}});
-        console.log('User found by email :',userByAge)
+       await User.deleteMany()
 
-      const userByName = await User.findOne({firstName : 'Jane',lastName :'Doe'})
-      console.log('User found by first and last name : ',userByName)
+       const user = await User.create({
+        fristName : "John",
+        lastName : "Doe",
+        email : "john@gmail.com",
+        dateOfBirth :new Date('2004-08-25')
+       })
+       console.log(user.fullName) 
+
+       const foundUser = await User.findById(user._id)
+       console.log('User with virtuals :',foundUser.toJSON());
+
 
     }catch(error){
-        console.log("Show error ",error)
+        console.log("show run error ",error)
+    }finally{
+        mongoose.connection.close()
     }
 }
 
-run()
+run() 
+
+
+
 
 
 
