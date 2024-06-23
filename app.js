@@ -1,71 +1,53 @@
-// Instance methods in Mongoose are methods that you define on the schema and can be called on 
-// instances of the model. 
-// They are useful for encapsulating logic that applies to individual documents.
-
-const mongoose = require('mongoose')
+// Query Helpers in Mongoose allow you to add custom helper methods to your Mongoose models. 
+// These helpers are especially useful for reusing commonly used query operations. 
+// Here is an example to demonstrate how you can define and use Query Helpers in Mongoose.
+//Query Helpers
+const mongoose = require('mongoose');
 const {Schema} = mongoose
 
-mongoose.connect('mongodb://localhost:27017/test')
+mongoose.connect('mongodb://localhost:27017/mydatabase')
 .then(()=>{
     console.log("mongoose connected successfully")
 })
-
-.catch((error)=>{
-    console.log("show connected error ",error)
+.catch((err)=>{
+    console.log('show mongose error ',err)
 })
 
-//userSchema create
 const userSchema = new Schema({
-    fristName : String,
+    firstName : String,
     lastName : String,
-    email : String,
-    age : Number
+    email : String
 });
-//define a static method to find users by email
-userSchema.statics.findByEmail = function(email){
-    // return  this.findOne({email:email}); 
-    return  this.findOne({email:email}); 
+
+userSchema.query.byFirstName = function (firstName){
+    return this.where({firstName : new RegExp(firstName,'i')}) ;
+
 }
 
-userSchema.statics.findAllAboveAge = function(age){
-    return this.find({age : {$gt : age}})
+const User = mongoose.model('User',userSchema) 
+
+//create function 
+
+async function findUsers(){
+    try{
+
+        await User.create([
+            { firstName: 'John', lastName: 'Doe', email: 'john@example.com' },
+            { firstName: 'Jane', lastName: 'Smith', email: 'jane@example.com' },
+            { firstName: 'Johnny', lastName: 'Appleseed', email: 'johnny@example.com' }
+          ]);
+
+        // User the query Helper to find users by first name
+        const userNamedJohn = await User.find().byFirstName('john');
+        console.log("userNamedJohn ",userNamedJohn)   
+
+
+    }catch(error){
+        console.log("Show method error ",error)
+    }
 }
 
-const User = mongoose.model('User',userSchema); 
-
-
-async function runExample(){
-    await mongoose.connection.dropDatabase();
-    const users = [
-        {fristName : 'John',lastName : 'Doe',email : 'John@gmail.com',age:25},
-        {fristName: "Jane",lastName:"Samith",email :"Jane@gmail.com",age:30},
-        {fristName:"Alice",lastName : 'JohnName',email:"alice.johnson@gmail.com"},
-        {fristName : 'Bob',lastName : 'Brown',email : 'bob.brown@gmail.com'}
-    ];
-
- await User.insertMany(users)
- 
- //call static methods 
- const userByEmail = await User.findByEmail('John@gmail.com');
- console.log('User found by email :',userByEmail)
-
- const userAboveAge = await User.findAllAboveAge(20)
- console.log('User above age 20 :',userAboveAge);
-
-//  disconnect from the database
- mongoose.disconnect()
-}
-
-runExample().catch(err=>console.log(err));
-
-
-
-
-
-
-
-
-
+findUsers()
 
 
 
