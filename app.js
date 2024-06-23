@@ -1,72 +1,64 @@
-// Virtuals in Mongoose are document properties that are not stored in the database but are
-//  computed on the fly. They are useful for defining derived properties that you want to include 
-// in your documents without actually storing them in the database.
+// Aliases in Mongoose allow you to define alternate names for fields. This can be particularly useful 
+// when you need to interact with different data sources or APIs that use different naming conventions. 
+// Aliases let you map external names to your internal schema field names,
+//  making your code more flexible and easier to maintain.
 
 const mongoose = require('mongoose')
-const {Schema} = mongoose
+const {Schema} = mongoose;
+
 mongoose.connect('mongodb://localhost:27017/mydatabase')
 .then(()=>{
-    console.log("mongoose connect successfully")
+    console.log("mongoose connected successfully")
 })
 .catch((error)=>{
-    console.log("mongoose connected error ",error)
+    console.log("mongoose error ",error)
 })
 
 const userSchema = new Schema({
-    fristName : {type : String , required : true},
-    lastName : {type : String , required : true},
-    email : {type : String , required : true,unique:true},
+    firstname : {type : String , required : true,alias : 'first_name'},
+    lastName : {type : String ,required : true ,alias : "last_name"},
+    email : {type : String ,required : true,unique : true},
     dateOfBirth : {type : Date , required : true}
+    
 });
 
-userSchema.virtual('fullName').get(function(){
-    return `${this.fristName} ${this.lastName}` 
-})
+const User = mongoose.model('User',userSchema)
 
-//virtual for age 
-
-userSchema.virtual('age').get(function(){
-    const ageDifMS = Date.now() - this.dateOfBirth.getTime();
-    const ageDate = new Date(ageDifMS); //milisconds from epoch
-
-   return Math.abs(ageDate.getUTCFullYear() - 1970);
-
-})
-
-//Ensure virtual fields are serialized 
-
-userSchema.set('toJSON',{virtuals:true});
-userSchema.set('toObject',{virtuals:true});
-
-const User = mongoose.model('User',userSchema);
-
-async function run(){
+ async function run(){
     try{
-       //ensoure the database connection is open
-       await mongoose.connection
-       
-       await User.deleteMany()
-
-       const user = await User.create({
-        fristName : "John",
-        lastName : "Doe",
-        email : "john@gmail.com",
-        dateOfBirth :new Date('2004-08-25')
-       })
-       console.log(user.fullName) 
-
-       const foundUser = await User.findById(user._id)
-       console.log('User with virtuals :',foundUser.toJSON());
-
-
+        //ensure connection 
+        await mongoose.connection;
+        //clear the collection before a fresh start
+        await User.deleteMany({})
+        
+        const user = await User.create({
+            first_name : "John",
+            last_name : "Doe",
+            email : "john.doe",
+            dateOfBirth : new Date("1990-01-01")
+        })
+    //Retrieve and log the user
+    // const foundUser = await User.findById(user._id).exec()
+    const foundUser = await User.findById(user._id)
+    console.log("User : ",foundUser)
+     // Access fields using aliases
+     console.log('First Name:', foundUser.first_name); // Alias
+     console.log('Last Name:', foundUser.last_name);   // Alias
+     //output - john Doe
     }catch(error){
         console.log("show run error ",error)
     }finally{
-        mongoose.connection.close()
+        mongoose.connection.close();
     }
 }
+run()
 
-run() 
+
+
+
+
+
+
 
 
 
