@@ -1,40 +1,33 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose
-mongoose.connect('mongodb://localhost:27017/test')
-.then(()=>{
-    console.log("mongose connected successfully")
-})
-.catch((error)=>{
-    console.log("show connection error ",error)
-})
+const mongoose = require('mongoose');
 
-const userSchema = new Schema({
-    name : String,
-    email : String
+// Schema definition
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+});
+
+// Model creation
+const User = mongoose.model('User', userSchema);
+
+// Connection URI
+const uri = 'mongodb://localhost:27017/test';
+
+// Connecting to MongoDB with bufferTimeoutMS option
+mongoose.connect(uri, {
+  bufferTimeoutMS: 5000, // Set buffer timeout to 5 seconds //buffer time no support
 })
-//option
-userSchema.set({autoCreate:true})
-const User = mongoose.model('User',userSchema,{ autoCreate: true });
+  .then(() => {
+    console.log('Connected to MongoDB');
 
-const runfun = async() =>{
-    try{
-    //    await User.deleteMany({})
-   const newUser = new User({
-    name : "mohit sharma",
-    email : "Mohit@gmail.com"
-   })
-   console.log(newUser)
-   await newUser.save()
-//   await  newUser.save((err)=>{
-//     if(err){
-//       return "saved error"+err
-//     }else{
-//         return console.log("saved successfully")
-//     }
-//   })
-}catch(error){
-    console.log("show error runfun ",error)
-}
-}
-runfun()
+    // Performing a database operation
+    const newUser = new User({ name: 'John Doe', email: 'john@example.com' });
 
+    // Saving the user to the database
+    newUser.save((err) => {
+      if (err) return console.error(err);
+      console.log('User saved successfully');
+    });
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB', err);
+  });
