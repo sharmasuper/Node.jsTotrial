@@ -1,49 +1,38 @@
-The capped option in Mongoose is used to create a capped 
-collection in 
-MongoDB. A capped collection is a fixed-size collection that 
-maintains insertion order and, once the specified size limit is 
-reached, automatically overwrites the oldest documents when new 
-documents are inserted. This is useful for use cases like logging, 
-where you want to maintain a rolling log of a fixed size.
-
+// The collection option in Mongoose allows you to specify the name of the collection that a model should use. 
+// By default, Mongoose will use the pluralized and lowercased version of the model name as the collection name. However,
+//  you can override this by explicitly setting the collection option.
 
 const mongoose = require('mongoose')
 const {Schema} = mongoose
 
-
-const url = 'mongodb://localhost:27017/test';
-
-mongoose.connect(url)
+mongoose.connect('mongodb://localhost:27017/test')
 .then(()=>{
-    console.log("mongodb connected successfully")
+    console.log("mongoose connect successfully")
 })
 .catch((error)=>{
     console.log("show error ",error)
 })
 
 const userSchema = new Schema({
-    message : String,
-    timeStamp : {type : Date ,default : Date.now}
-}
-// {
-//     capped : {size : 1024 ,max :100,autoIndexId : true}
-// }
-)
-userSchema.set({'capped':{size : 1024 ,max :100,autoIndexId : true}})
-const use = mongoose.model('Log',userSchema) 
-
-
-
-const runfun = async() =>{
+    name :String,
+    email : String
+},{
+   collection :'my_custom_collection' 
+})
+//
+//const User = new mongoose.model('users',userSchema,"my_custom_collection")
+const User = new mongoose.model('users',userSchema)
+//ab data users collection ki jagah my_custom_collection mai add hoga 
+const runFun = async() =>{
     try{
-     const newLog = new use({ message:'this is a log message'})
-      console.log(newLog)
-    await  newLog.save() 
-    }catch(error){
+     const newData = new User({name : "mohitji",email : "mohit@gmail.com"})
+     console.log(newData)
+     await newData.save()
+}catch(error){
         console.log("show error ",error)
     }
 }
-runfun()
+runFun()
 
 
 
