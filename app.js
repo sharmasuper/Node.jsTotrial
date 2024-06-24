@@ -15,11 +15,12 @@ mongoose.connect('mongodb://localhost:27017/test')
     console.log("show error ",error)
 })
 
-const options = {discriminatorKey : 'Kind'}
+const options = {discriminatorKey , 'Kind'}
 const userSchema = new Schema({
     name : String,
     email : String
 },options)
+// userSchema.set({'discriminatorKey' , 'Ms'}) //esai bhi kar skatai h
 const User = mongoose.model('User',userSchema)
 
 const studentSchema = new mongoose.Schema({
