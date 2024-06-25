@@ -1,6 +1,12 @@
-//The toJSON method in Mongoose is used to customize the JSON representation of documents when they are converted to JSON. This can be particularly useful for hiding sensitive information or transforming data before it is sent to clients.
+// The toObject method in Mongoose is used to convert a Mongoose 
+// document to a plain JavaScript object. This can be useful when you 
+// need to work with the document data in a more straightforward manner
+//  or when you want to customize the output, such as hiding sensitive
+//   information or modifying certain fields before sending the data 
+//   to a client.
 
-const mongoose = require('mongoose')
+
+  const mongoose = require('mongoose')
 const {Schema} = mongoose
 mongoose.connect('mongodb://localhost:27017/test')
 .then(()=>{
@@ -16,44 +22,49 @@ const userSchema = new mongoose.Schema({
     password : String,
 },
 {
-    toJSON : {
-        virtuals : true , //Include virtuals 
-        versionKey : false,
-        transform : function (doc ,ret) {
-            delete ret._id, //Remove _id
-            delete ret.id //delete default Id
-            delete ret.password; //Remove password
-            return ret;
+    // toJSON : {
+    //     virtuals : true , //Include virtuals 
+    //     versionKey : false,
+    //     transform : function (doc ,ret) {
+    //         delete ret._id, //Remove _id
+    //         delete ret.id //delete default Id  //beacause when we delete _id default id - id has come so i delete both id
+    //         delete ret.password; //Remove password
+    //         return ret;
            
-        }
+    //     }
+    // }
+   toObject : {
+    virtuals : true, //include virtuals
+    versionKey : false,//remove version _c key
+    transform : function (doc,ret) {
+        delete ret._id;
+        delete ret.id;
+        delete ret.password; //remove password
+        return ret; 
     }
+   }
+
 })
 //Create a Model
 const User = mongoose.model('User',userSchema)
 
-const runfunc = async() =>{
- try{
-    const user = new User({
-        name : 'John Doe',
-        email : 'mohit123@gmail.com',
-        password : 'secretpassword'
-     }) 
-      await  user.save()
-       console.log(user)
+const runFun = async() =>{
+try{
+    const userDoc = new User({
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        password: 'secretpassword1234'
+    });
+    console.log("saved user ",userDoc)
+  await  userDoc.save()
   
-     //find the document and convert into JSON
-     const findJsonUser = await User.findOne({email : 'mohit123@gmail.com' })
-      console.log("findJson user ",findJsonUser.toJSON())
-   
-
-
- }catch(error){
+  const user = await User.findById(userDoc._id) 
+  console.log("find user ",user.toObject()) 
+mongoose.connection.close()
+}catch(error){
     console.log("show error ",error)
- }
-} 
-runfunc()
+}
+}
 
 
-
-
-
+runFun()
