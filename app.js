@@ -1,52 +1,47 @@
-//The _id method is not a specific method in Mongoose. However, 
-// you might be referring to handling documents by their _id field, 
-// which is a unique identifier for each document in a 
-// MongoDB collection.
-const mongoose = require('mongoose');
-const {Schema} = mongoose
+// In Mongoose, the minimize option can be used to control whether 
+// empty objects are removed from 
+// documents before saving them to the database. By default, minimize 
+// is set to true, meaning Mongoose will remove empty objects from 
+// documents.
 
-mongoose.connect('mongodb://localhost:27017/mydatabase')
+const mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost:27017/test')
 .then(()=>{
-    console.log('mongoose connected successfully')
-})
+    console.log("mongoose connected successfully")
+}) 
 .catch((error)=>{
-    console.log("mongoose connected  error ",error)
+    console.log("show coneccted error ",error)
 })
 
-const userSchema = new Schema({
-    name: String,
-    email: String
-  });
-
-const User = mongoose.model('User', userSchema);
-
-async function addUserAndFindById(){
-    try{
-      //Save the use to the databse 
-      const newUser = new User({
-        name: 'John Doe',
-        email: 'john.doe@example.com'
-      });
-      const savedUser = await newUser.save();
-      console.log('Saved User:', savedUser);
-
-      const userId = savedUser._id;
-      const foundUser = await User.findById(userId);
-      console.log('Found User by _id:', foundUser);
-  
-      // Close the database connection
-      await mongoose.connection.close();
-
-    }catch(error){
-        console.log("show error ",error)
+const exampleSchema = new mongoose.Schema({
+    name : String,
+    details : {
+        info : String,
+        extra : Object
     }
+},{minimize : false})   //by default : true
+
+const Example = mongoose.model('users',exampleSchema)
+
+const runDoc = async() =>{
+ try{
+   const examples = new Example({
+      name : "Mohit Sharama",
+      details : {
+        info : "inof Name",
+        extra : {}
+      }
+      
+   })
+   console.log(examples)
+   examples.save()
+   console.log("data saved successfully")
+ }catch(error){
+    console.log("shoe error ",error)
+ }
 }
 
-addUserAndFindById()
-
-
-
-
+runDoc()
 
 
 
