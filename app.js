@@ -1,48 +1,48 @@
-// In Mongoose, the minimize option can be used to control whether 
-// empty objects are removed from 
-// documents before saving them to the database. By default, minimize 
-// is set to true, meaning Mongoose will remove empty objects from 
-// documents.
+// The read option in Mongoose allows you to specify the read preference for queries, which can be useful in a replicated 
+// MongoDB setup. This option lets you define how the query should be distributed among the replica set members. Common read 
+// preferences include primary, 
+// primaryPreferred, secondary, secondaryPreferred, and nearest.
 
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/test')
 .then(()=>{
     console.log("mongoose connected successfully")
-}) 
+})
 .catch((error)=>{
-    console.log("show coneccted error ",error)
+    console.log("show error ",error)
 })
 
-const exampleSchema = new mongoose.Schema({
+const userschema = new mongoose.Schema({
     name : String,
     details : {
         info : String,
-        extra : Object
+        extra : String
     }
-},{minimize : false})   //by default : true
+})
 
-const Example = mongoose.model('users',exampleSchema)
+const Example = mongoose.model('users',userschema)
 
-const runDoc = async() =>{
- try{
-   const examples = new Example({
-      name : "Mohit Sharama",
-      details : {
-        info : "inof Name",
-        extra : {}
-      }
-      
-   })
-   console.log(examples)
-   examples.save()
-   console.log("data saved successfully")
- }catch(error){
-    console.log("shoe error ",error)
- }
+const runExample = async() =>{
+    try{
+    await Example.deleteMany({})
+ const newDocs = new Example({
+    name : 'Example Name',
+    details : {
+        info : 'Some info',
+        extra : 'Some extra details'
+    }
+ })
+
+    const result = await newDocs.save() 
+         console.log(result) 
+       const docs =   Example.find().read('secondaryPreferred')          
+       console.log(docs)
+    }catch(error){
+        console.log("shoe error ",error)
+    }
 }
 
-runDoc()
-
+runExample()
 
 
 
