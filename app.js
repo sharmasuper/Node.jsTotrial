@@ -1,11 +1,7 @@
-// The writeConcern option in Mongoose allows you to specify the level of acknowledgment requested from MongoDB for write operations. This can be particularly important for ensuring data durability and consistency.
-
-// Write concern levels include:
-
-// w: The number of replicas that must acknowledge the write before it is considered successful.
-// j: If set to true, the write operation waits for the journal to be written to disk.
-// wtimeout: The timeout in milliseconds for write concern acknowledgment.
-
+// /In Mongoose, the shardKey option is used to specify the shard key 
+// for a collection in a sharded MongoDB cluster. The shard key is a
+//  field (or fields) used to distribute the data across the shards.
+//   Setting a shard key in Mongoose is done at the schema level.
 
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/test')
@@ -16,45 +12,54 @@ mongoose.connect('mongodb://localhost:27017/test')
     console.log("show mongoose errr",error)
 })
 
-
-const Schema = new  mongoose.Schema({
-    name : String ,
+const exampleSchema = new mongoose.Schema({
+    name : String,
+    category: String,
     details : {
-        info : String,
+        info: String,
         extra : String
     }
-}
-// {
-//    writeConcern : {
-//      w : 1,
-//      j : true,
-//      wtimeout : 1000
-//    }
+},{shardKey : {category:1}}) //Shard key on the category field
 
-// }
-)
 
-const Example = mongoose.model('Example',Schema)
+const Example = mongoose.model('Example',exampleSchema)
 
-const runFunc = async() =>{
-try{
-    const newDocs = new Example({
-        name : "Eample Name",
-        details : {
-            info : "Example Info",
-            extra : "Example Extra"
-        } 
-    })
-     //show user 
-     console.log(newDocs)
-     //save user
-     await newDocs.save()
-     console.log("save successfully")
-   
+const runfun = async() =>{
+    try{
+//   const newDocs = new Example({
+//     name : "Example Name",
+//     category : "Category A",
+//     details : {
+//         info : "Some Info",
+//         extra : 'Some extra details'
+//     }
+//   })
+//   console.log(newDocs) 
+// //saved user
+//   newDocs.save() 
+//find 
+const check = Example.find()
+console.log(check)
+
+  // Connect to the MongoDB instance via mongo shell and run:
+//whenever we find it 
+  // use test 
+// sh.enableSharding("test")
+// sh.shardCollection("test.examples", { category: 1 })
 
 }catch(error){
-    console.log("show error ",error)
+    console.log("show error ",error) 
+}  
 }
-}
-runFunc()
+runfun()
+
+
+
+
+
+
+
+
+
+
 
