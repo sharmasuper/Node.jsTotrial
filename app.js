@@ -1,64 +1,62 @@
-// The strict option in Mongoose defines how the schema behaves with 
-// fields that are not specified in the schema. By default, strict is 
-// set to true, meaning Mongoose will strip out any fields that are not
-//  defined in the schema. If strict is set to false, Mongoose will 
-//  allow the addition of fields that are not in the schema.
-
+// The strictQuery option in Mongoose controls how Mongoose handles 
+// fields that are not defined in the schema during query operations. 
+// When strictQuery is set to true, Mongoose will strip out any fields 
+// in the query that are not defined in the schema. When set to false, 
+// it allows querying with fields not defined in the schema.
 
 const mongoose = require('mongoose')
+const {Schema} = mongoose
 mongoose.connect('mongodb://localhost:27017/test')
 .then(()=>{
     console.log("mongoose connected successfully")
 })
 .catch((error)=>{
-    console.log("show mongoose errr",error)
+    console.log("show error ",error)
 })
 
-const exampleSchema = new mongoose.Schema({
-    _id : String,
+const userSchema = new Schema({
     name : String,
-    category: String,
+    category : String,
     details : {
-        info: String,
+        info : String,
         extra : String
     }
-},{strict:true}) // Allow fields not defined in the schema if true
+})
+
+mongoose.set('strictQuery',false) 
+//allow fields not defined in the schema for quries
+// by default false h yai matlab iskai true honai per vo field jo schema 
+//mai nahi h vo search kartha h yai
+const Example = mongoose.model('Example',userSchema)
 
 
-const Example = mongoose.model('Example',exampleSchema)
-
-const runFunc = async() =>{
- try{
-  await Example.deleteMany({})
+const runExample = async() =>{
+    try{
   const example = new Example({
-      _id:1,          // id:'1', isisai kam nahi chalaiga _id hi lkhni hogi
-      name : "example1",
-      category : "category1",
-      details : {
-          info : "info1",
-          extra : "extra1"
-      },
-  },{
-    additionalField : "This field is not in the schema "
-  }
+    name : "example",
+    category : "example",
+    details : {
+        info : "example",
+        extra : "example"
+    }
+   
+  })
 
-)
   await example.save()
- 
- const find =  await Example.find({}) 
- console.log(find)
- }catch(error){
-    console.log("show error ",error) 
- }
+  
+  console.log(example)
+  console.log("user saved successfully")
+
+ //find - query with a field not defined in the schema
+
+ const findUser =  await  Example.find({nonExistentField: 'value'})
+console.log(findUser)
+
+}catch(error){
+    console.log("shoe error ",error) 
 }
-
-runFunc()
-
-
-
-
-
-
+}
+runExample()
 
 
 
