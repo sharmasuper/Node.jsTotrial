@@ -1,22 +1,12 @@
-// In MongoDB 5.0 and later, you can create a time series collection, which is optimized for storing and querying
-//  time series data. Mongoose, as of my last update, does not have direct support for creating time series collections 
-//  in its schema definition. However, you can still interact with time series collections using Mongoose by creating the
-//   collection manually and then using Mongoose for CRUD operations.
+// In Mongoose, the skipVersioning option allows you to exclude 
+// specific paths from versioning. Mongoose's versioning mechanism 
+// automatically increments the __v field whenever a document is 
+// updated. By using skipVersioning, you can prevent updates to 
+// certain fields from incrementing the document's version.
 
-
-
-////firststep before using this
-
-// db.createCollection("sensorReadings", {
-//     timeseries: {
-//       timeField: "timestamp",
-//       metaField: "metadata",
-//       granularity: "minutes"
-//     }
-//   });
   
 
-const { Timestamp } = require('mongodb')
+
 const mongoose = require('mongoose') 
 const {Schema} = mongoose   
 mongoose.connect('mongodb://localhost:27017/test') 
@@ -27,53 +17,49 @@ mongoose.connect('mongodb://localhost:27017/test')
     console.log("show error ",error)
 })
 
-const sensorReadingSchema = new Schema({
-     timestamp : {
-        type : Date ,
-        required : true
-     },
-     metadata : {
-        sensorId : String,
-        location : String
-     },
-     value : {
-        type : Number,
-        required : true
-     }
+const blogPostSchema = new mongoose.Schema({
+    title: String,
+    content: String,
+    views: {
+      type: Number,
+      default: 0
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }, {
+    versionKey: '__v',
+    skipVersioning: { views: true }  // Exclude 'views' from versioning
+  });
 
-});
 
 
-const User = mongoose.model('sensorReadings',sensorReadingSchema)
+const BlogPost = mongoose.model('sensorReadings',blogPostSchema)
 
 
 const runFun = async() =>{
-    try{
-//     const newData = new User({
-//         timestamp: new Date(),
-//         metadata: {
-//           sensorId: 'sensor_1',
-//           location: 'building_1'
-//         },
-//         value: 23.5
-//     })
-      
-//    await  newData.save() 
-//     console.log(newData)
-//find method
-// const findata = await User.find({'metadata.sensorId': 'sensor_1'}).sort({ timestamp: -1 })
+try{
+    const post = new BlogPost({
+        title: 'First Post',
+        content: 'This is the content of the first post.'
+      });
+   await  post.save()
+    console.log(post) 
+    const find = await BlogPost.findById(post._id)
+    find.views +=1;
+   await  find.save()
+    console.log('Updated views:', find.views);
+    console.log('Version (should not increment):', find.__v);
+   // Update a different field to see version increment
+   find.title = "update title";
+  await  find.save()
 
-// const updateUser = await  User.updateOne(
-//     // { 'metadata.sensorId': 'sensor_1' },{$set:{value:24.0}}) 
-//     { 'metadata.sensorId': 'sensor_1' },{value:25.0})                    //timestamp :specificDate
-//   console.log(updateUser)   
-// //
-//deleteOne
-const deleteUser = await  User.deleteOne({ 'metadata.sensorId': 'sensor_1' })
- console.log(deleteUser) 
-//  User.deleteOne({ 'metadata.sensorId': 'sensor_1', timestamp: specificDate })
-    }catch(error){
-        console.log("show error ",error)
+         console.log('Updated title:', find.title);
+          console.log('Version (should increment):', find.__v);
+
+}catch(error){
+        console.log("show error ",error) 
     }
 }
 runFun()
