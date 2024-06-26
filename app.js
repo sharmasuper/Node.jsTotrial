@@ -1,7 +1,8 @@
-// Optimistic concurrency control is a technique used to handle concurrent updates to a document in Mongoose. 
-// It ensures that changes to a document are not overwritten by concurrent updates. Mongoose uses the version key (__v by default) for 
-// optimistic concurrency control. When optimisticConcurrency is set to true, Mongoose will check the version key to detect if the document has
-// been modified between when it was retrieved and when it was saved.
+// In Mongoose, collation is used to define the rules for string 
+// comparison, such as sorting and searching, in MongoDB queries. 
+// It allows you to specify language-specific rules for string 
+// comparison, such as case sensitivity and accent sensitivity. 
+// Here’s an example of how to use collation in Mongoose:
 
 const mongoose = require('mongoose') 
 const {Schema} = mongoose   
@@ -13,14 +14,14 @@ mongoose.connect('mongodb://localhost:27017/test')
     console.log("show error ",error)
 })
 
-const customTypeKey = 't'
+
 const userSchema = new Schema({
-    name : {t : String ,required : true },
-    age : {t : Number ,required : true },
-    email : {t : String ,required : true},  
+    name : {type : String ,required : true },
+    
+    email : {type : String },  
 },
-{typeKey : customTypeKey,versionKey : 'myVersionKey', optimisticConcurrency: true}
- //custom version key
+
+ 
 )
 
 
@@ -29,10 +30,12 @@ const User = mongoose.model('User',userSchema)
 const runFun = async() =>{
     try{
             // await User.deleteMany()
-       newData = new User({name : "Mohit Sharma" ,
-        age : 25 , email : 'MohitType1mB3@gmail.com'})
-       await newData.save() 
-       console.log(newData)
+    //const find =   await  User.find({name : 'Vasu Sharma3'}).collation({locale:'en',strength:2}).sort({name:1})
+      const find =   await  User.find().collation({locale:'en',strength:2}).sort({name:1})
+      
+    console.log(find)
+       
+       
     }catch(error){
         console.log("show error ",error)
     }
