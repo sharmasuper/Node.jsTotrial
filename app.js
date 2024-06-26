@@ -1,12 +1,11 @@
-// The toObject method in Mongoose is used to convert a Mongoose 
-// document to a plain JavaScript object. This can be useful when you 
-// need to work with the document data in a more straightforward manner
-//  or when you want to customize the output, such as hiding sensitive
-//   information or modifying certain fields before sending the data 
-//   to a client.
+// n Mongoose, the typeKey option allows you to specify a different 
+// key name for defining types in a 
+// schema. By default, Mongoose uses type as the key for type 
+// definitions, but this can be customized using the typeKey option
 
 
-  const mongoose = require('mongoose')
+
+const mongoose = require('mongoose')
 const {Schema} = mongoose
 mongoose.connect('mongodb://localhost:27017/test')
 .then(()=>{
@@ -15,56 +14,22 @@ mongoose.connect('mongodb://localhost:27017/test')
 .catch((error)=>{
     console.log("show error ",error)
 })
+const customTypeKey = 't'
+const userSchema = new Schema({
+    name : {t : String ,required : true },
+    age : {t : Number ,required : true },
+    email : {t : String ,required : true,unique : true },  
+},{typeKey : customTypeKey})
 
-const userSchema = new mongoose.Schema({
-    name : String,
-    email : String,
-    password : String,
-},
-{
-    // toJSON : {
-    //     virtuals : true , //Include virtuals 
-    //     versionKey : false,
-    //     transform : function (doc ,ret) {
-    //         delete ret._id, //Remove _id
-    //         delete ret.id //delete default Id  //beacause when we delete _id default id - id has come so i delete both id
-    //         delete ret.password; //Remove password
-    //         return ret;
-           
-    //     }
-    // }
-   toObject : {
-    virtuals : true, //include virtuals
-    versionKey : false,//remove version _c key
-    transform : function (doc,ret) {
-        delete ret._id;
-        delete ret.id;
-        delete ret.password; //remove password
-        return ret; 
-    }
-   }
-
-})
-//Create a Model
 const User = mongoose.model('User',userSchema)
 
 const runFun = async() =>{
-try{
-    const userDoc = new User({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        password: 'secretpassword1234'
-    });
-    console.log("saved user ",userDoc)
-  await  userDoc.save()
-  
-  const user = await User.findById(userDoc._id) 
-  console.log("find user ",user.toObject()) 
-mongoose.connection.close()
-}catch(error){
-    console.log("show error ",error)
+    try{
+       newData = new User({name : "Mohit Sharma" ,age : 25 , email : 'MohitType@gmail.com'})
+       await newData.save()
+       console.log(newData)
+    }catch(error){
+        console.log("show error ",error)
+    }
 }
-}
-
-
 runFun()
