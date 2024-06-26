@@ -1,13 +1,10 @@
-// In Mongoose, the timestamps option automatically adds createdAt
-//  and updatedAt fields to your schema, which track the creation and
-//   modification times of the documents. This is particularly useful 
-//   for maintaining a record of when documents were created and last 
-//   updated.
-
-  
-
+// Mongoose plugins allow you to encapsulate reusable schema logic.
+//  You can define a plugin to handle specific functionality, 
+//  such as managing tags on documents. Here’s an example of how to 
+//  create a plugin for adding tags to Mongoose documents.
 
 const mongoose = require('mongoose') 
+const { pluginTags } = require('./pluginTags')
 const {Schema} = mongoose   
 mongoose.connect('mongodb://localhost:27017/test') 
 .then(()=>{ 
@@ -24,31 +21,31 @@ const blogPostSchema = new mongoose.Schema({
 },{timestamps:true}) //Adds createAt and upodateAt fields
 
 
-
+blogPostSchema.plugin(pluginTags)
 const BlogPost = mongoose.model('sensorReadings',blogPostSchema)
 
 
 const runFun = async() =>{
 try{
-    const post = new BlogPost({
-        title: 'Hello Post',
-        content: 'This is the content of the first post.',
-        auther:"john Post"
-      });
-   await  post.save()
-    console.log(post) 
-    const find = await BlogPost.findById(post._id)
-    // find.views +=1;
-   await  find.save()
-    // console.log('Updated views:', find.views);
-    console.log('Version (should not increment):', find.__v);
-   // Update a different field to see version increment
-   find.title = "update title";
-  await  find.save()
+   const post = new BlogPost({
+    title : "First Post",
+    content : "This is the content of the post",
+    author : 'John Doe'
+   })
+    await  post.save()   
+   console.log("post saved ",post)
+     //add another tag 
+     await post.addTag('Programming');
+   console.log("add post ",post)
 
-         console.log('Updated title:', find.title);
-          console.log('Version (should increment):', find.__v);
-   //esai hum check kar sktai or update kar sktai h
+   //remove a tag
+   await post.removeTag('Programming');
+   console.log("remove post ",post)
+
+   //get all tags
+  const tags = await post.getTags();
+  console.log(tags)
+
 }catch(error){
         console.log("show error ",error) 
     }
