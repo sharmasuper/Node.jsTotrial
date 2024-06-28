@@ -20,17 +20,20 @@ mongoose.connect('mongodb://localhost:27017/test')
 const userSchema = new Schema({
     name : {type : String,required : true},
     age : {type : Number,required:true}
-},{autoIndex:true})
+},{autoIndex:true}) // Automatically build indexes for this schema
   
 
-const User = mongoose.model('User',userSchema,'Ms')
+const User = mongoose.model('User',userSchema,"Ms")
 
 const runfun = async() =>{
  try{
-    const user = new User({name: 'John Doe', age: 30})
-    await user.save()
-    console.log('User saved successfully!') 
-    
+    const session = await mongoose.startSession();
+    // session.startTransaction();
+    // const user = new User({name: 'John Doe', age: 30})
+    const user = await User.findOne({username:'john_doe'}).session(session).readConcern('majority');
+       await session.commitTransaction()
+          session.endSession()
+       console.log('User found ',user)   
  }catch(error){
     console.log("show error ",error)
  }
