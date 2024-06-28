@@ -1,73 +1,37 @@
-// n Mongoose, the storeSubdocValidationError option determines 
-// whether Mongoose should store validation errors for subdocuments. 
-// By default, Mongoose does not store validation errors for 
-// subdocuments. Here’s an example of how you can use this option:
+// In Mongoose, collectionOptions allows you to specify options when 
+// creating a collection. These options are typically used to set 
+// various collection-level configurations such as collation, capped 
+// collections, and more.
 
-
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const {Schema} = mongoose
-
-// Define a schema for a product
 mongoose.connect('mongodb://localhost:27017/test')
-.then(()=>{
-    console.log('mongoose connected successfully')
-})
-.catch((error)=>{
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Connection error', err));
+
+  const schemaOptions = {
+    collation: { locale: 'en', strength: 2 }, // Collation option
+    capped: { size: 1024, max: 100 }, // Capped collection option
+  };
+
+
+const userSchema = new Schema({
+    name : {type : String,required : true},
+    age : {type : Number,required:true}
+},schemaOptions)
+  
+
+const User = mongoose.model('User',userSchema,'Ms')
+
+const runfun = async() =>{
+ try{
+    const user = new User({name: 'John Doe', age: 30})
+    await user.save()
+    console.log('User saved successfully!') 
+    
+ }catch(error){
     console.log("show error ",error)
-})
-
-const childSchema = new Schema({
-  name : {type:String,required:true}
-});
-
-const parentSchema = new Schema({
-    children : [childSchema] 
-},
-{
-    storeSubdocValidationError: false
-}//koi ferk hi nhi padha
-)
-
-const Parent = mongoose.model('parents',parentSchema);
-
-
-const runFun = async() =>{
-  try{
-        const parent = new Parent({
-   //correct =        children: [{ name: 'Joh' }, { name: 'hello' }] //one valid and one invalid schema
-        
-   //incorrect is =   //children: [{ name: 'Joh' }, { name: '' }]  
-        })
-        console.log(parent)
-           await parent.save()
-        console.log("user saved successfully")
-
-  }catch(error){
-    console.log("show error ",error)
-  }
+ }
 }
-runFun()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+runfun()
 
