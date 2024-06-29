@@ -1,42 +1,56 @@
-// /The autoIndex option in Mongoose is used to specify whether or 
-// not Mongoose should automatically build indexes defined in your 
-// schema when your application starts. By default, autoIndex is set 
-// to true in development mode and false in production mode. However,
-//  you can override this behavior based on your specific requirements.
-
+// Sure! Here is the full code that includes the getter method for the picture field in a Mongoose schema, along with the ability to control whether getters 
+// are applied when converting the document to an object.
 
 const mongoose = require('mongoose');
 const {Schema} = mongoose
-mongoose.connect('mongodb://localhost:27017/test')
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Connection error', err));
+const path = require('path')
+const rootpath = path.join(__dirname,'operations')
+// const root = 'https://s3.amazonaws.com/mybucket'
+console.log(rootpath)
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/mydatabase').then(() => {
+  console.log('Connected to MongoDB');
+}).catch(err => {
+  console.error('Error connecting to MongoDB', err);
+});
 
-//   const schemaOptions = {
-//     collation: { locale: 'en', strength: 2 }, // Collation option
-//     capped: { size: 1024, max: 100 }, // Capped collection option
-//   };
-
+// Define a schema
 
 const userSchema = new Schema({
-    name : {type : String,required : true},
-    age : {type : Number,required:true}
-},{autoIndex:true}) // Automatically build indexes for this schema
-  
+  name : String,
+  picture : {
+    type : String,
+    get : v => `${rootpath}${v}`
+  }
+})
+// Apply the getters to the JSON and Object output by default
+userSchema.set('toJSON',{getters: true});
+userSchema.set('toObject',{getters : true});
 
-const User = mongoose.model('User',userSchema,"Ms")
 
-const runfun = async() =>{
- try{
-    const session = await mongoose.startSession();
-    // session.startTransaction();
-    // const user = new User({name: 'John Doe', age: 30})
-    const user = await User.findOne({username:'john_doe'}).session(session).readConcern('majority');
-       await session.commitTransaction()
-          session.endSession()
-       console.log('User found ',user)   
- }catch(error){
+const User =  mongoose.model('User',userSchema)
+
+async function run(){
+  try{
+  //  const newDoc = new User({
+  //   name : "bollywood Actress",
+  //   picture : '/katrina.jpg'
+  //  })
+  //  console.log(newDoc)
+  //console.log("show docs",newDoc.toObject({ getters: false }).picture)
+  //console.log(doc.toObject().picture)
+  //give all link
+  ///Katrina.jpg
+  //  await newDoc.save()
+
+   const  findUser = await  User.find({name:'bollywood Actress'})
+   console.log(findUser)
+   console.log(findUser.toJSON())
+  // console.log(findUser.toObject({ getters: true }).picture) 
+    //yai wrong h cpde 
+  }catch(error){
     console.log("show error ",error)
- }
+  }
 }
-runfun()
+run()
 
