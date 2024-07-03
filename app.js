@@ -10,76 +10,58 @@ mongoose.connect('mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.m
   console.log("show error ",error)
 })
 
-//Define User Schema with autoCreate and autoIndex disabled
-
-//jab hum single data schema add kartai h tab hamai pipeline ki 
-//need nahi hoti but jab ek array mai data insert kartai h tab hamai 
-//pipeline ki need hoti h 
-////////////////////////////most theory //////////////////////////////////
-// A pipeline is used when creating a MongoDB view to define how the data from the source collection should be transformed or filtered before being presented in the view. This allows you to project only specific fields, rename fields, aggregate data, and apply other transformations.
-
-// In this case, the pipeline is used to redact the name and email fields by showing only the first three characters followed by "...". This is useful for hiding sensitive information.
-
-// Here’s the complete code including the creation of a pipeline for redacting sensitive information:
-
-
-
-const userSchema = new Schema({
-  name : String,
-  email : String,
-   roles: [String]
-},{autoCreate:false,autoIndex:false})
-
-
-const User = mongoose.model('Ram',userSchema)
-const RedactedUser = mongoose.model('RedactedUser',userSchema)
-
-
-const createView = async() =>{
-  try{
-    //connect to database
-     // Create a pipeline for redacting sensitive information
-      await mongoose.connection 
-      await User.createCollection()
-    await RedactedUser.createCollection({
-      viewOn : 'rams',//set viewOn the colleciton name , **not** model
-      pipeline : [
-        { 
-          $set : {
-            name : {$concat : [{$substr : ['$name',0,3]},'...']},
-            email : {$concat : [{$substr : ['$email',0,3]},'...']},
-           
-          }
-        }
-      ]
-    })
-
- const newData =  await User.create(
-  [{name : "LadduammohitTannu gandhi",email : 'mohitgandhi2@gmail.com',roles : ["mohhyuc","fattu2"]
+const topicSchema = new Schema({
+  title : {
+    type : String,
+    required : [true,'Title is required'],
+    minlength : [5,'Title must be at least 5 characters long'],
+    maxlength : [100,'title cannot exceed 100 characters']
   },
-  {name :"LadduohitTannu",email : "mohit@gmail.com",roles : ["soniya2",'soniya1']}
-])
-  console.log(newData)
-  //fetch and log redacted user data with admin data
-
-  // const redactedUsers = await RedactedUser.find()
-
-const redactedUsers = await RedactedUser.find({roles : "soniya2"})
-  console.log("find Users",redactedUsers)
-
-
-
-
-
-mongoose.connection.close()
-  }catch(error){
-    console.log("show error ",error)
+  description : {
+    type : String,
+    required : [true,'Description is required'],
+    minlength : [10,"description must be at least 10 character long"]
+  },
+  createAt : {
+    type : Date,
+    default : Date.now
   }
+})
+
+const Topic = mongoose.model('Topic',topicSchema)
+
+const runfunction = async() =>{
+ try{
+    const topic = await Topic.create([{
+      title : "Mohit",
+      description : "This is a topic about Mohit",
+      createAt : new Date() 
+    },
+    {
+      title : "second array",
+      description : "This is a topic about Mohit",
+      createAt : new Date() 
+    },
+    {
+      title : "Third Arrray",
+      description : "This is a topic about Mohit",
+      createAt : new Date() 
+    }
+  ])
+  // const topic = new Topic(
+  //   {title : 'mohit1',description : "This is a topic about mohit"}
+  // ) 
+   //issai only ek data hi insert kar sktai h or fir save kartai 
+   //jabhi create ka use karnai per save ki need nahi hoti h
+
+
+    console.log("show data ",topic)
+ }catch(error){
+  console.log("show error ",error)
+ }
 }
 
-createView()
-
-
+runfunction()
 
 
 
