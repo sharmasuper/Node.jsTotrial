@@ -655,7 +655,55 @@ sign up Form  => email and password  => server
 
 
 
+////////////////////////////////////////////////////////
+//mongoose.conection //connect to the database 
+//  await mongoose.connection;
+ //fist,create the user model's inderlying collection
+//  await User.createCollection()
+  
+//  await RedactedUser.createCollection({
+//   viewOn : 'users',//set viewOn to the collecction name ,**not* model
+//   pipeline : [
+//     {
+//      $set :{
+//       name : {$concat : [{$substr : ['$name',0,3]},'...']},
+//       email : {$concat : [{$substr : ['$email',0,3]},'...']}
+//      }
+//     }
+//   ]
+//  }); //yai bhi correct pipeline h 
 
+//ab meri pipeline dekho 
+//  await RedactedUser.createCollection({
+//   viewOn : 'users', //set viewOn to the collection name ,**name*
+//   // pipeline  : [
+//   //   {
+//   //     $set : {
+//   //       name : {$concat : [{$substr : ['$name',0,3]},'...']},
+       
+//   //     }
+//   //   }
+//   // ]
+//  })
+
+// const newdata = await User.create([
+//   {name : 'John99' ,email : 'join99@gmail.com',roles:["mohit1",'mohit2']},
+//   {name : 'Jane99' ,email : 'jane99@gmail.com',roles:["mohit12",'mohit12']}
+
+// ])
+// console.log(newdata)  // ismai save ki need nahi hoti 
+
+// const newData = new User.create([
+//   {name : 'John99' ,email : 'join99@gmail.com',roles:["mohit1",'mohit2']},
+//  {name : 'Jane99' ,email : 'jane99@gmail.com',roles:["mohit12",'mohit12']}
+
+// ])
+//  console.log(newData)  //wronng method hum ismai new nahi laga sktai because yai koi class nahi h or constructor
+//  const newData =  await User.create({name : "single Array",email:"single@gmail.com",roles : ['single1','single2']})
+//    console.log(newData)  //correct method
+  //    const newData =  await User({name : "single Array",email:"single@gmail.com",roles : ['single1','single2']})
+  //  console.log(newData)  //correct method
+    //correct method
 
 
 
