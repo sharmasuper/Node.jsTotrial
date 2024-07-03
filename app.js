@@ -7,57 +7,45 @@ mongoose.connect('mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.m
   console.log("mongoose connected successfully")
 })
 .catch((error)=>{
-  console.log("show error ",error)
+  console.log("show error ",error) 
 })
+// Certainly! The pre method in Mongoose is a middleware that allows you to run some function before a particular operation (like save, validate, remove, etc.) is executed. In this case, 
+// you want to execute a function before a child document is saved.
 
-const topicSchema = new Schema({
-  title : {
+
+const childSchema = new Schema({
+  name : {
     type : String,
-    required : [true,'Title is required'],
-    minlength : [5,'Title must be at least 5 characters long'],
-    maxlength : [100,'title cannot exceed 100 characters']
-  },
-  description : {
-    type : String,
-    required : [true,'Description is required'],
-    minlength : [10,"description must be at least 10 character long"]
-  },
-  createAt : {
-    type : Date,
-    default : Date.now
+    required : true
   }
 })
-
-const Topic = mongoose.model('Topic',topicSchema)
-
+//only have pre method like - pre('validate') or pre('save)
+childSchema.pre('save',function(next){
+  if(this.name === 'invalid'){
+    return next(new Error("#sadpanda"))
+  }
+  next()
+ });
+ const parentSchema = new Schema({
+  children : [childSchema]
+ })
+ const Parent = mongoose.model('Parent',parentSchema);
 const runfunction = async() =>{
  try{
-    const topic = await Topic.create([{
-      title : "Mohit",
-      description : "This is a topic about Mohit",
-      createAt : new Date() 
-    },
-    {
-      title : "second array",
-      description : "This is a topic about Mohit",
-      createAt : new Date() 
-    },
-    {
-      title : "Third Arrray",
-      description : "This is a topic about Mohit",
-      createAt : new Date() 
-    }
-  ])
-  // const topic = new Topic(
-  //   {title : 'mohit1',description : "This is a topic about mohit"}
-  // ) 
-   //issai only ek data hi insert kar sktai h or fir save kartai 
-   //jabhi create ka use karnai per save ki need nahi hoti h
+     
+     const parent = await  Parent.create({
+      // children : [{name : 'helllo'}]  //no Error
+      children : [{name : "invalid"}]  // show error
 
+     })
+     console.log(parent)
+     
 
-    console.log("show data ",topic)
+    
  }catch(error){
   console.log("show error ",error)
+ }finally{
+  mongoose.connection.close()
  }
 }
 
