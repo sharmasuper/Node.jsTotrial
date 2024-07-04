@@ -1,6 +1,6 @@
 //K7g50h7PieDU1TPM
 const mongoose = require('mongoose')
-const {Schema} = mongoose
+const { Schema, Types } = mongoose;
 
 mongoose.connect('mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.mongodb.net/MERNFirst?retryWrites=true&w=majority&appName=Cluster0')
 .then(()=>{
@@ -10,31 +10,43 @@ mongoose.connect('mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.m
   console.log("show error ",error) 
 })
 
+const conversationSchema = new Schema({numMessage : Number});
+//issai hum different database bana sktai h
+const Conversation = mongoose.model('Conversation', 
+  conversationSchema, 'conversations', { db: 'db2' });
 
-const userSchema = new Schema({
-  phone : {
-    type : String,
-    validate : {
-      validator : function (v){
-        if(v[0]==='5'){
-          return v
-        }else{
-          throw new Error("please write correct field")
-        }
-      }
-    }
+
+const eventSchema = new Schema({
+  name : String,
+  conversation : {
+    type : Types.ObjectId,
+    ref :  'Conversation'
   }
 })
-const User = mongoose.model('Person',userSchema)
-const runfunction = async() =>{
+
+const Event = mongoose.model('Event', eventSchema, 
+  'events', { db: 'db1' });
+
+
+async function createEventWithConversation(){
   try{
-    const validateData = await  User.create({phone : '5344'})
-   console.log(validateData)
+   
+   const newConversation = new Conversation({numMessage:0});
+   await newConversation.save()
+
+   const newEvent = new Event({
+    name : 'Sample Event',
+    conversation : newConversation._id
+   });
+    
+   await newEvent.save();
+  console.log("Event and Conversation created successfully");
 
   }catch(error){
     console.log("show error ",error)
   }
-   
 }
 
-runfunction()
+createEventWithConversation()
+
+
