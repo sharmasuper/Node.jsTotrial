@@ -10,49 +10,31 @@ mongoose.connect('mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.m
   console.log("show error ",error) 
 })
 
-const personSchema = new Schema({
-  region : String,
-  sales : Number
-})
 
-
-const Sale = mongoose.model('Sales',personSchema)
-
-async function streamDocument(){
-  try{
-  //   const newData = await Sale.create([
-  //     { "region": "North", "sales": 100 },
-  // { "region": "South", "sales": 150 },
-  // { "region": "North", "sales": 200 },
-  // { "region": "East", "sales": 250 },
-  // { "region": "West", "sales": 300 },
-  // { "region": "South", "sales": 100 }
-  //   ])
-   const results = await Sale.aggregate([
-      {
-        $group : {
-          _id : "$region",
-          totalSales : { $sum : "$sales" }
+const userSchema = new Schema({
+  phone : {
+    type : String,
+    validate : {
+      validator : function (v){
+        if(v[0]==='5'){
+          return v
+        }else{
+          throw new Error("please write correct field")
         }
-      },
-      {
-        $sort : {totalSales:1}
       }
-   ])
+    }
+  }
+})
+const User = mongoose.model('Person',userSchema)
+const runfunction = async() =>{
+  try{
+    const validateData = await  User.create({phone : '5344'})
+   console.log(validateData)
 
-   console.log(results)
-   
   }catch(error){
-    console.log('Error streaming document :',error)
+    console.log("show error ",error)
   }
-  finally{
-    mongoose.connection.close()
-  }
+   
 }
 
-streamDocument()
-
-
-
-
-
+runfunction()
