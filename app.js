@@ -1,76 +1,59 @@
-//K7g50h7PieDU1TPM
-//ms6375349671
 
-const { default: mongoose, Schema } = require("mongoose");
+const mongoose = require('mongoose')
+const {Schema} = mongoose 
+const str = 'mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.mongodb.net/db1?retryWrites=true&w=majority&appName=Cluster0'
 
-const uri1 = 'mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.mongodb.net/db1?retryWrites=true&w=majority&appName=Cluster0'
-const uri2 = 'mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.mongodb.net/db2?retryWrites=true&w=majority&appName=Cluster0';
-
-const db1 = mongoose.createConnection(uri1)
-const db2 = mongoose.createConnection(uri2)
-
-
-db1.on('connected',()=>{
-  console.log("Connected to db1")
-
+mongoose.connect(str)
+.then(()=>{
+  console.log("mongoose connected successfully")
 })
-db1.on('error',()=>{
-  console.error("db1 is not connected show error")
-})
-db2.on('connected',()=>{
-  console.log('connected to db2')
+.catch((error)=>{
+  console.log("show error ",error)
 })
 
-db2.on('error',()=>{
-  console.error("db1 is not connected show error")
+const option  = {discriminatorKey : 'kind'};
+
+const baseSchema = new Schema({
+  name : {type : String ,required : true},
+  createAt : {type : Date ,default : Date.now}
+},option)
+
+const Base = mongoose.model('Base',baseSchema)
+
+const carSchema = new Schema({
+  model : {type : String,required : true},
+  year : {type : Number,required : true}
 })
 
+const Car = Base.discriminator('Car',carSchema)
 
-const conversationSchema = new Schema({numMessage :Number})
-const Conversation = db2.model('Conversation',conversationSchema)
+const bikeSchema = new Schema({
+  brand : {type : String,required : true},
+  gearCount : {type : Number,required : true}
+})
 
-
-const eventSchema = new Schema({
-  name : String,
-  conversation : {
-    type : Schema.Types.ObjectId,
-    ref : 'Conversation'
-  }
-});
+const Bike = Base.discriminator('Bike',bikeSchema)
 
 
-const Event = db1.model('Event',eventSchema);
+const runfunction = async() => {
+   const car = new Car({name : "Mycar",model : 'Toyota',year : 2020})
+   await car.save()
 
-async function createEventWithConversation(){
-  try{
-    const newConversation = new Conversation({numMessage :0})
-    await newConversation.save()
-    
-    const newEvent = new Event({
-          name : "Sample Event",
-          conversation : newConversation._id
-    });
-    // console.log(newEvent)
-    await newEvent.save()
-    //Create a new Event in db1 with a reference to the doversation 
+   const bike = new Bike({name : 'MyBike',brand : 'Giant',gearCount :21})
+   await bike.save()
 
-    // console.log('Event and conversation created successfully')
-    // //find population 
-    const event = await Event.findById(newEvent._id).populate({ 
-      path: 'conversation',
-      model: Conversation
-    }).exec();
-    console.log('Event with populated conversation:', event);
-  }catch(error){
-    console.error(error)
-  }
+   const cars = await Car.find()
+   const bikes = await Bike.find()
+
+   console.log("Cars",cars)
+
+   console.log("Bikes ",bikes);
+
+   await mongoose.connection.close();
+
 }
 
-createEventWithConversation()
-
-
-
-
+runfunction() 
 
 
 
