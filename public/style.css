@@ -1,0 +1,42 @@
+.ImageSizeCustomize{
+    width:125px;
+    height:125px;
+   /* border:2px solid black; */
+   display: inline-block;
+   border-radius: 50%;
+   background-image: url('funnyBear.jpg');
+   background-position: center;
+   background-position: top;
+   background-size: cover;
+
+}
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.ParentClass{
+    /* border:2px solid black; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.ParentClass form{
+    width:250px;
+    height:130px;
+    background-color:whitesmoke;
+    box-shadow: 1px 1px 5px 1px;
+   /* position: relative;
+   left:25px; */
+   padding-left: 40px;
+    
+}
+.inputSubmit{
+    
+    background-color: rgb(245, 237, 222);
+    border:0.5px solid black;
+    
+}
+

@@ -1,77 +1,54 @@
-
+const express = require('express')
 const mongoose = require('mongoose')
-const {Schema} = mongoose 
-const str = 'mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.mongodb.net/db1?retryWrites=true&w=majority&appName=Cluster0'
+const dotenv = require('dotenv')
+const bodyParse = require('body-parser')
+const cookieParser = require('cookie-parser')
+const { router } = require('./routes/authRoutes') 
+const { requireAuth, checkUser } = require('./middleware/authmiddleware')
 
-mongoose.connect(str)
+
+const app = express()
+app.use(bodyParse.json())
+// app.use(express.json())
+app.use(express.static('public'))
+app.use(cookieParser()) 
+app.set('view engine','ejs')
+dotenv.config()
+mongoose.connect(process.env.connectedSTr)
 .then(()=>{
-  console.log("mongoose connected successfully")
+  console.log("mongodb connected successfully")
+  app.listen(process.env.PORT,()=>{
+    console.log("application run successfully " + process.env.PORT)
+  })
+
 })
 .catch((error)=>{
-  console.log("show error ",error)
+  console.log("mongoose error ",error)
 })
 
-const option  = {discriminatorKey : 'kind'};
+app.get("*",checkUser);
+app.get('/',(req,res)=>{
+  res.render('home')
+}) 
 
-const baseSchema = new Schema({
-  name : {type : String ,required : true},
-  createAt : {type : Date ,default : Date.now}
-},option)
-
-const Base = mongoose.model('Base',baseSchema)
-
-const carSchema = new Schema({
-  model : {type : String,required : true},
-  year : {type : Number,required : true}
+app.get("/smoothies",requireAuth,(req,res)=>{
+   res.render('smoothies')
 })
 
-const Car = Base.discriminator('Car',carSchema)
-
-const bikeSchema = new Schema({
-  brand : {type : String,required : true},
-  gearCount : {type : Number,required : true}
+app.use(router)
+// //cookie
+app.get('/set-cookies',(req,res)=>{
+  //res.setHeader('Set-Cookie','newUser=true')
+  res.cookie('newUser',false)
+  res.cookie('isEmployee',true,{maxAge:1000*60*60*24})
+  res.send('you got the cookies')
 })
+// app.get('/read-cookies',(req,res)=>{
+//   const cookies = req.cookies;
+//   console.log(cookies)
+//   res.json(cookies)  
 
-const Bike = Base.discriminator('Bike',bikeSchema)
-
-
-const runfunction = async() => {
-   const car = new Car({name : "Mycar",model : 'Toyota',year : 2020})
-   await car.save()
-
-   const bike = new Bike({name : 'MyBike',brand : 'Giant',gearCount :21})
-   await bike.save()
-
-   const cars = await Car.find()
-   const bikes = await Bike.find()
-
-   console.log("Cars",cars)
-
-   console.log("Bikes ",bikes);
-
-   await mongoose.connection.close();
-
-}
-
-runfunction() 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// })
 
 
 
