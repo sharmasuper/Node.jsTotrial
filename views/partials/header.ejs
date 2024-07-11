@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <div class="mainRoute">
+        <ul class="childTable">
+        <% if(user) {%>
+            <li>Welcome , <%=user.email  %></li>
+            <li><a href="/logout_get">Logout</a></li>    
+        <% }else{ %>
+               <li><a href="/Login">Log In</a></li>
+               <li><a href="/signUp">SignUp</a></li>  
+        <% } %>
+        </ul>
+        
+    </div>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+    <div class="container">
+        
+        <div class="formContainer" style="margin-top: 20px;">
+            <h2>Please Login In Bro!!</h2>
+            <form>
+                 
+                 <label>Email</label>
+                 <div></div>
+                 <input type="text" name="Email" />
+                 <div class="EmailError" style="color: red;"></div>
+                 <pre></pre>
+                 <label>Password</label>
+                 <div></div>
+                 <input type="text" name="Password" />
+                 <div class="PasswordError" style="color: red;"></div>
+                 <pre></pre>
+                 <button>Submit</button>
+                 <a href="/SignUp">Please SignIn</a>
+            </form>
+        </div>
+
+        
+    </div>
+
+    <script>
+        const form = document.querySelector('form')
+        const EmailError = document.querySelector(".EmailError")
+        const PasswordError = document.querySelector(".PasswordError")
+            form.addEventListener('submit',async(e)=>{
+            e.preventDefault()
+            //get the value
+          
+            let  email = form.Email.value
+            let  password = form.Password.value 
+            try{
+            const response = await  fetch('./Login',{
+                method : 'POST',
+                headers : {'Content-Type' : 'application/json'},
+                body : JSON.stringify({email:email,password:password}) 
+            })
+             const data =    await response.json()
+             console.log("show data ",data) 
+             if(data.error){
+                   
+                EmailError.textContent = data.error.email 
+                PasswordError.textContent = data.error.password
+             }
+             
+             else{
+                
+                EmailError.textContent = ''
+                PasswordError.textContent = ''
+                email = ''
+                password = ''
+                location.assign('/') 
+             }
+             
+            }catch(error){
+                console.log("show Login Error ",error)
+            } 
+        })
+                   
+    </script>
+
+
+
+
+
+
+
+</body>
+</html>
