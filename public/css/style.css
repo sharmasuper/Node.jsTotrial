@@ -1,0 +1,187 @@
+/* body template */
+body{
+    background-image: url("../images/blankImage.jpg"); 
+    background-size: cover;
+    background-position: center;
+   
+    /* background-color: yellow; */
+}
+/* Navbar design */
+
+.Header_Main{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+   
+}
+.Header_Main div p{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.folder_line{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.folder_line li {
+    margin-left: 50px;
+    list-style-type: none;
+}
+.folder_line li a {
+    text-decoration: none;
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: black;
+    font-weight: 500;
+}
+
+
+
+@media (max-width : 800px) {
+    .Header_Main div p{
+        font-size: 20px;
+    }
+    .folder_line li a{
+        font-size: 15px;
+    }
+}
+@media (max-width : 600px){
+    .Header_Main div p{
+        font-size: 18px;
+    }
+    .Header_Main{
+        justify-content: space-around;
+    }
+    .folder_line li{
+        margin-left: 25px;
+    }
+}
+
+@media (max-width:410px){
+    .Header_Main{
+       
+        display: flex;
+        position: relative;
+    }
+    .folder_line{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; 
+        /* border:1px solid black; */
+        padding: 0%;
+        margin: 0px;
+        position: absolute;
+        top:40px;
+        right: 0px;
+        display: none;
+        background-color: aliceblue;
+    }
+    .show_folder{
+       display: block;
+       transition: all 1.5s;
+       right: 20px;
+       background-image: url("../images/blankImage.jpg"); 
+       background-size: cover;
+       background-position: center
+      
+    }
+    .folder_line li{
+        margin-left: 0px;
+        margin: 10px 60px 10px 60px;
+        background-color: rgb(243, 178, 94);
+        
+
+    }
+    .folder_line li a {
+        font-size: 20px;
+    }
+        
+}
+
+/* index.ejs style */
+.IndexFirstText p{
+    font-size: 26px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    padding-left:40px ;
+}
+.IndexFirstText_Image{
+    width:90%;
+    height:600px; 
+    background-image: url("../images/moonBeach.avif");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position:center;
+}
+
+.center_Image_customize{
+    width:100%;
+    height:auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.Latest_Update p{
+    font-size: 30px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    padding-left:40px ;
+}
+.Latest_Update ul {
+    padding-left:40px ;
+    font-size: 25px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+}
+.Latest_Update ul li{
+    padding-left:40px ;
+    list-style-type: none;
+}
+.Latest_Update ul li a{
+    color: black;
+    list-style: none;
+    font-size: 25px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-evenly;
+    
+}
+.Post_Update{
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+}
+
+.Post_Update a,p{
+    color:black;
+    text-decoration: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 25px;
+    font-weight:600;
+}
+
+.container_Search{
+    width: 100%;
+    height:50px;
+    /* border:1px solid black;  */
+}
+.container_Search form{
+    padding-top: 10px;
+    text-align: center;
+
+}
+
+.container_Search form input{
+    width:80%;
+    height:30px;
+    border: none;
+    
+    
+}
