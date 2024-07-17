@@ -1,0 +1,13 @@
+
+const mongoose = require('mongoose')
+const userSchema = new mongoose.Schema({
+    name  : {
+        type : String,
+        required : true
+    }
+
+})
+
+
+const User = mongoose.model('bases',userSchema) 
+module.exports ={ User}
