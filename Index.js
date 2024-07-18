@@ -1,75 +1,67 @@
+const mongoose = require('mongoose')
+const env = require('dotenv')
 const express = require('express')
+const { User } = require('./UserModel/model')
 const app = express()
-const mongoose = require("mongoose")
-const { User } = require('./users')
+env.config()
 
-mongoose.connect("mongodb+srv://ms6375349671:K7g50h7PieDU1TPM@cluster0.wv4kfmu.mongodb.net/db1?retryWrites=true&w=majority&appName=Cluster0")
-.then(()=>{
-    console.log("mongoose connected successsfully")
+mongoose.connect(process.env.Str)
+.then(()=>{ 
+    app.listen(process.env.port,()=>{
+        console.log("api connected successfully  "+process.env.port )
+    })
 })
 .catch((error)=>{
-    console.log("show mongoose error",error)
+    console.log("show mongoose error ",error)
 })
-app.get("/posts",paginatedResults(User),(req,res)=>{
+
+app.use(express.json())
+app.use(express.static('public')) 
+app.set('view engine','ejs') 
+ 
+const paginationFunctionality = (StaticData) =>{
+    return async (req,res,next) =>{
+        const page = parseInt(req.query.page,10) 
+        const limit = parseInt(req.query.limit,10)
+        const results = {} 
+       
+        const totalDocslength = await StaticData.countDocuments()
+        const totalPages =  Math.ceil( totalDocslength/limit) 
+        results.totalPages = totalPages  
+         results.currentPage = page 
+        const startIndex = (page-1)*limit
+        const endIndex = page*limit
+        
+        if(startIndex > 0 ){
+            results.prevPage = page-1
+        }
+        if(endIndex < await StaticData.countDocuments() ){
+         results.nextPage = page+1
+        }
      
-    res.json(res.locals.paginatedResults)
-    
-})
-
-// const use = [User]
-app.get("/users",paginatedResults(User),(req,res)=>{
-  res.json(res.locals.paginatedResults)
-})
-
-
-function paginatedResults(model){
-   console.log("show model",model)
-    return async (req,res,next)=>{       
-        const page = parseInt(req.query.page) 
-        const limit = parseInt(req.query.limit) 
-        const startIndex = (page -1) * limit 
-        const endIndex = page*limit 
-    //    const resultUsers = users.slice(startIndex,endIndex)
-    //    res.json(resultUsers)
-    
-      const results = {}
-    console.log(model.length)
-    console.log(await model.countDocuments())
-
-    //  if(endIndex < await  model.length){
-    //     results.next = {
-    //         page : page + 1, 
-    //         limit : limit 
-    //       }
-    //  }
-     if(endIndex < await model.countDocuments().exec()){
-        results.next = {
-            page : page + 1,
-            limit : limit
-          } 
-     }
-
-
-     if(startIndex>0){
-        results.previous = {
-            page : page -1,
-            limit : limit
-          }}
-      
-    //   results.result = await  model.slice(startIndex,endIndex) 
-           results.result = await model.find().limit(limit).skip(startIndex).exec()
-        //    console.log(await model.find())
-    //   console.log("before res ",res)  
-    //   res.paginatedResults = results   
-      res.locals.paginatedResults = results 
-    //   console.log("after response ",res)
-      next()
+        const paginatedData = await StaticData.find().limit(limit).skip(startIndex)
+        results.paginatedData = paginatedData
+        res.Variableassign = results
+        next()
     }
+   
 }
 
 
-
-app.listen(3000,()=>{
-    console.log("api listen successfully 3000")
+app.get("/Users",paginationFunctionality(User),(req,res)=>{
+          res.json(res.Variableassign)
 })
+
+app.get("/getPaginationRender",(req,res)=>{
+   res.render('Index')
+})
+
+
+
+
+
+
+
+
+
 
