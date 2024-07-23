@@ -21,6 +21,8 @@ app.use(partialResponse());
 
 // Route to get users
 app.get('/users', (req, res) => {
+  const fields = req.query
+  console.log(fields)
   res.json(users);
 });
 
