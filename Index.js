@@ -1,48 +1,40 @@
+// The method-override middleware in Express.js is used to allow 
+// HTTP verbs such as PUT or DELETE to be used in places where the 
+// client doesn't support it. This is particularly useful in situations
+//  where HTML forms only support GET and POST methods, but you need 
+//  to use PUT or DELETE methods for CRUD operations.
+
 const express = require('express');
-const errorhandler = require('errorhandler');
-const notifier = require('node-notifier');
+const methodOverride = require('method-override');
 
 const app = express();
-const port = 3000;
 
-// Custom error notification function
-function errorNotification(err, str, req) {
-  const title = 'Error in ' + req.method + ' ' + req.url;
+// Use method-override middleware
+app.use(methodOverride('_method'));
 
-  notifier.notify({
-    title: title,
-    message: str
-  });
-}
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
 
-// Use the errorhandler middleware only in development environment
-if (process.env.NODE_ENV === 'development') {
-  app.use(errorhandler({ log: errorNotification }));
-}
-
-// Sample route that throws an error
-app.get('/error', (req, res, next) => {
-  const err = new Error('Something went wrong!');
-  err.status = 500;
-  next(err);
+// Example route using PUT method
+app.put('/update/:id', (req, res) => {
+  const id = req.params.id;
+  // Handle the update logic here
+  res.send(`Updating item with id ${id}`);
 });
 
-// Sample route that does not throw an error
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+// Example HTML form to trigger PUT request
+app.get('/form', (req, res) => {
+  res.send(`
+    <form action="/update/123?_method=PUT" method="POST">
+      <button type="submit">Update</button>
+    </form>
+  `);
 });
 
-// Error-handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    error: {
-      message: err.message,
-    }
-  });
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
-});
+
+
+
