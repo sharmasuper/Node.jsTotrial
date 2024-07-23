@@ -1,46 +1,55 @@
-// The vhost middleware in Express.js allows you to handle multiple virtual hosts with a 
-// single Express application. This is useful when you want to serve different applications or
-//  routes based on the subdomain or domain.
+// cls-rtracer is a middleware for Express.js that provides request tracing, making it easier to track
+//  and log requests across the entire application, including asynchronous operations. 
+// It uses Continuation-Local Storage (CLS) to maintain context for the lifetime of a request.
 
+// const express = require('express');
+// const rTracer = require('cls-rtracer');
 
-// Import necessary modules
+// const app = express();
+
+// // Apply the rTracer middleware
+// app.use(rTracer.expressMiddleware());
+
+// app.get('/', (req, res) => {
+//   // Retrieve the request identifier
+//   const requestId = rTracer.id();
+//   res.send(`Request ID: ${requestId}`);
+// });
+
+// app.listen(3000, () => {
+//   console.log('Server is running on port 3000');
+// });
+
 const express = require('express');
-const vhost = require('vhost');
+const rTracer = require('cls-rtracer');
+const winston = require('winston');
 
-// Create main app
 const app = express();
 
-// Create subdomain apps
-const app1 = express();
-const app2 = express();
-
-// Define middleware or routes for subdomain apps
-app1.use((req, res) => {
-  res.send('Hello from app1.example.com!');
+// Create a winston logger
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, level, message }) => {
+      const requestId = rTracer.id();
+      return `${timestamp} [${level}] [${requestId}] ${message}`;
+    })
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
 });
 
-app2.use((req, res) => {
-  res.send('Hello from app2.example.com!');
+// Apply the rTracer middleware
+app.use(rTracer.expressMiddleware());
+
+app.get('/', (req, res) => {
+  // Log a message with the request ID
+  logger.info('Handling request');
+  res.send('Hello, World!');
 });
 
-// Use vhost middleware to route requests to the appropriate subdomain app
-app.use(vhost('app1.example.com', app1));
-app.use(vhost('app2.example.com', app2));
-
-// Define a fallback route for non-matching requests
-app.use((req, res) => {
-  res.send('Hello from the main app!');
+app.listen(3000, () => {
+  logger.info('Server is running on port 3000');
 });
-
-// Start the server
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
-
-
-
-
-
-
