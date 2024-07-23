@@ -1,29 +1,31 @@
-// The connect-rid middleware is used to add a unique request ID to each incoming request 
-// in an Express.js application. This can be helpful for tracking requests across your application and in logs.
-
 const express = require('express');
-const connectRid = require('connect-rid');
+const cookieSession = require('cookie-session');
 
 const app = express();
 
-// Use connect-rid middleware
+// Configure cookie-session middleware
+app.use(cookieSession({
+    name: 'session',
+    keys: ['key1', 'key2'], // Use an array of keys for encryption
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
-app.use((req,res,next)=>{
-     req.id = "mohit sharma it is my id"
-     next()
-})
-app.use(connectRid());
-// Example route
-app.get('/', (req, res) => {
-    // Access the request ID
-    const requestId = req.id;
-    res.send(`Hello, world! Your request ID is ${requestId}`);
+// Example route to set a session value
+app.get('/set-session', (req, res) => {
+    req.session.userId = 12345; // Set session data
+    res.send('Session data set');
 });
 
-// Another example route
-app.get('/info', (req, res) => {
-    const requestId = req.id;
-    res.json({ message: 'This is an info route', requestId: requestId });
+// Example route to get session value
+app.get('/get-session', (req, res) => {
+    const userId = req.session.userId;
+    res.send(`Session data: ${userId ? `User ID is ${userId}` : 'No user ID set'}`);
+});
+
+// Example route to destroy session
+app.get('/destroy-session', (req, res) => {
+    req.session = null;
+    res.send('Session destroyed');
 });
 
 // Start the server
@@ -31,5 +33,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-
