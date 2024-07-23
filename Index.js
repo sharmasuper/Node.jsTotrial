@@ -1,39 +1,23 @@
-// The method-override middleware in Express.js is used to allow 
-// HTTP verbs such as PUT or DELETE to be used in places where the 
-// client doesn't support it. This is particularly useful in situations
-//  where HTML forms only support GET and POST methods, but you need 
-//  to use PUT or DELETE methods for CRUD operations.
+const express = require('express')
+const app = express()
+const morgan = require('morgan')
+// app.use(morgan('tiny')) first method 
 
-const express = require('express');
-const methodOverride = require('method-override');
+morgan.token("host",(req,res)=>{
+    return req.hosname
+})
+app.use(morgan(`:method :url :host`))
 
-const app = express();
+app.get("/",(req,res)=>{
+  res.status(200).json({msg:"Welcome to thapa technical again"})
+})
 
-// Use method-override middleware
-app.use(methodOverride('_method'));
-
-// Middleware to parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true }));
-
-// Example route using PUT method
-app.put('/update/:id', (req, res) => {
-  const id = req.params.id;
-  // Handle the update logic here
-  res.send(`Updating item with id ${id}`);
-});
-
-// Example HTML form to trigger PUT request
-app.get('/form', (req, res) => {
-  res.send(`
-    <form action="/update/123?_method=PUT" method="POST">
-      <button type="submit">Update</button>
-    </form>
-  `);
-});
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
+app.get("/server",(req,res)=>{
+ res.json("api on server")
+})
+app.listen(3000,()=>{
+  console.log("api listen on port "+3000)
+})
 
 
 
