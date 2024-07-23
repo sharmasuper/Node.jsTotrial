@@ -1,44 +1,35 @@
-// In an Express.js application, you can handle errors and send JSON responses by creating a custom 
-// error-handling middleware. This middleware will catch any errors thrown in your routes or other 
-// middleware and respond with a JSON object
-//  containing the error details.
+// Partial responses in Express.js can be achieved using the express-partial-response middleware, 
+// which allows clients to request only specific parts of a resource. This can be particularly useful 
+// for optimizing performance and reducing the amount of 
+// data sent over the network.
+
 const express = require('express');
+const partialResponse = require('express-partial-response');
+
 const app = express();
 const port = 3000;
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+// Sample data
+const users = [
+  { id: 1, name: 'Alice', email: 'alice@example.com', age: 25 },
+  { id: 2, name: 'Bob', email: 'bob@example.com', age: 30 },
+  { id: 3, name: 'Charlie', email: 'charlie@example.com', age: 35 }
+];
 
-// Example route that triggers an error
-app.get('/', (req, res, next) => {
-  try {
-    // Simulate an error
-    throw new Error('Something went wrong!');
-  } catch (error) {
-    next(error); // Pass error to the error handler
-  }
+// Use partial response middleware
+app.use(partialResponse());
+
+// Route to get users
+app.get('/users', (req, res) => {
+  res.json(users);
 });
 
-// Example route that triggers a different type of error
-app.get('/notfound', (req, res, next) => {
-  const error = new Error('Resource not found');
-  error.status = 404;
-  next(error);
-});
-
-// General error-handling middleware
+// Error-handling middleware
 app.use((err, req, res, next) => {
-  // Set the response status code
-  const statusCode = err.status || 500;
-  res.status(statusCode);
-
-  // Send JSON response
-  res.json({
+  res.status(err.status || 500).json({
     error: {
       message: err.message,
-      status: statusCode,
-      // Include stack trace in development mode
-      ...(app.get('env') === 'development' ? { stack: err.stack } : {})
+      stack: req.app.get('env') === 'development' ? err.stack : {}
     }
   });
 });
@@ -46,6 +37,8 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+
 
 
 
