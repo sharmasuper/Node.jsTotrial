@@ -1,43 +1,48 @@
-// CORS (Cross-Origin Resource Sharing) middleware is essential for enabling cross-origin requests in Express.js
-//  applications. It allows your server to specify which domains are permitted to access its resources. 
-
 const express = require('express');
-const cors = require('cors');
+const errorhandler = require('errorhandler');
+const notifier = require('node-notifier');
 
 const app = express();
+const port = 3000;
 
-const corsOptions = {
-    origin: 'http://example.com', // Allow only example.com
-    methods: ['GET', 'POST'], // Allow only GET and POST methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
-    credentials: true // Allow credentials (cookies, authorization headers, etc.)
-};
+// Custom error notification function
+function errorNotification(err, str, req) {
+  const title = 'Error in ' + req.method + ' ' + req.url;
 
-// const corsOptionsDelegate = function (req, callback) {
-//     let corsOptions;
-//     if (req.header('Origin') === 'http://example.com') {
-//         corsOptions = { origin: true }; // Allow example.com
-//     } else {
-//         corsOptions = { origin: false }; // Deny other origins
-//     }
-//     callback(null, corsOptions);
-// };
+  notifier.notify({
+    title: title,
+    message: str
+  });
+}
 
-// hum yai bhi use kar sktai h 
+// Use the errorhandler middleware only in development environment
+if (process.env.NODE_ENV === 'development') {
+  app.use(errorhandler({ log: errorNotification }));
+}
 
+// Sample route that throws an error
+app.get('/error', (req, res, next) => {
+  const err = new Error('Something went wrong!');
+  err.status = 500;
+  next(err);
+});
 
-
-// Use CORS middleware
-app.use(cors(corsOptions));
-
+// Sample route that does not throw an error
 app.get('/', (req, res) => {
-    res.send('Hello, world!');
+  res.send('Hello World!');
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// Error-handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    error: {
+      message: err.message,
+    }
+  });
 });
 
-
-
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
+});
