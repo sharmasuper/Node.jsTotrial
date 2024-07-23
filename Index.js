@@ -1,22 +1,35 @@
-// Import necessary modules
-// The serve-index middleware in Express.js is used to serve directory listings.
-//  This can be useful for displaying the contents of a directory in the browser. 
-//  Here's an example of how to use serve-index in an Express.js application:
+// The vhost middleware in Express.js allows you to handle multiple virtual hosts with a 
+// single Express application. This is useful when you want to serve different applications or
+//  routes based on the subdomain or domain.
+
 
 // Import necessary modules
 const express = require('express');
-const path = require('path');
-const serveIndex = require('serve-index');
+const vhost = require('vhost');
 
-// Create an Express application
+// Create main app
 const app = express();
 
-// Use serve-index middleware to serve directory listings
-app.use('/public', express.static(path.join(__dirname, 'public')), serveIndex(path.join(__dirname, 'public'), { 'icons': true }));
+// Create subdomain apps
+const app1 = express();
+const app2 = express();
 
-// Define a basic route
-app.get('/', (req, res) => {
-  res.send('Go to /public to see the directory listing');
+// Define middleware or routes for subdomain apps
+app1.use((req, res) => {
+  res.send('Hello from app1.example.com!');
+});
+
+app2.use((req, res) => {
+  res.send('Hello from app2.example.com!');
+});
+
+// Use vhost middleware to route requests to the appropriate subdomain app
+app.use(vhost('app1.example.com', app1));
+app.use(vhost('app2.example.com', app2));
+
+// Define a fallback route for non-matching requests
+app.use((req, res) => {
+  res.send('Hello from the main app!');
 });
 
 // Start the server
@@ -24,6 +37,10 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+
+
+
 
 
 
