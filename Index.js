@@ -1,24 +1,16 @@
-// Import the necessary modules
+// To serve a favicon in an Express.js application, you can use the serve-favicon middleware. 
+// This middleware helps serve the favicon efficiently and correctly.
+
+// Import necessary modules
 const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
 
 // Create an Express application
 const app = express();
 
-// Create the response-time middleware
-const responseTime = (req, res, next) => {
-  const startHrTime = process.hrtime();
-
-  res.on('finish', () => {
-    const elapsedHrTime = process.hrtime(startHrTime);
-    const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
-    console.log(`${req.method} ${req.url} [${res.statusCode}] - ${elapsedTimeInMs.toFixed(3)} ms`);
-  });
-
-  next();
-};
-
-// Use the response-time middleware
-app.use(responseTime);
+// Use the serve-favicon middleware
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 // Define a basic route
 app.get('/', (req, res) => {
@@ -30,3 +22,5 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+
