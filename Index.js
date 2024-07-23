@@ -1,24 +1,32 @@
-const express = require('express')
-const app = express()
-const morgan = require('morgan')
-// app.use(morgan('tiny')) first method 
+// Import the necessary modules
+const express = require('express');
 
-morgan.token("host",(req,res)=>{
-    return req.hosname
-})
-app.use(morgan(`:method :url :host`))
+// Create an Express application
+const app = express();
 
-app.get("/",(req,res)=>{
-  res.status(200).json({msg:"Welcome to thapa technical again"})
-})
+// Create the response-time middleware
+const responseTime = (req, res, next) => {
+  const startHrTime = process.hrtime();
 
-app.get("/server",(req,res)=>{
- res.json("api on server")
-})
-app.listen(3000,()=>{
-  console.log("api listen on port "+3000)
-})
+  res.on('finish', () => {
+    const elapsedHrTime = process.hrtime(startHrTime);
+    const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
+    console.log(`${req.method} ${req.url} [${res.statusCode}] - ${elapsedTimeInMs.toFixed(3)} ms`);
+  });
 
+  next();
+};
 
+// Use the response-time middleware
+app.use(responseTime);
 
+// Define a basic route
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
 
+// Start the server
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
