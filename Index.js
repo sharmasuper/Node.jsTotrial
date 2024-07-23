@@ -13,6 +13,20 @@ const corsOptions = {
     credentials: true // Allow credentials (cookies, authorization headers, etc.)
 };
 
+// const corsOptionsDelegate = function (req, callback) {
+//     let corsOptions;
+//     if (req.header('Origin') === 'http://example.com') {
+//         corsOptions = { origin: true }; // Allow example.com
+//     } else {
+//         corsOptions = { origin: false }; // Deny other origins
+//     }
+//     callback(null, corsOptions);
+// };
+
+// hum yai bhi use kar sktai h 
+
+
+
 // Use CORS middleware
 app.use(cors(corsOptions));
 
@@ -24,14 +38,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-
-
-
-
-
-
-
 
 
 
